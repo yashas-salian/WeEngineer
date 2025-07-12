@@ -60,9 +60,9 @@ export function AppSidebar({
                   <SidebarMenuButton asChild onClick={()=>{
                     setTab(item.title as React.SetStateAction<tabStatus>)
                   }}>
-                    <a href={item.url}>
-                      <item.icon className="text-white"/>
-                      <span className="text-white">{item.title}</span>
+                    <a href={item.url} className={tab == item.title ? "bg-white text-black" : ""}>
+                      <item.icon className={tab == item.title ? "text-black" : "text-white"}/>
+                      <span className={tab == item.title ? "text-black" : "text-white"}>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

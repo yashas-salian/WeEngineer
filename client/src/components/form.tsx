@@ -27,7 +27,7 @@ export const Form = ({search , setSearch} : {search : SearchSchema , setSearch :
         setSelected(resetData)
         setSearch(resetData)
 }
-    return <form className="p-4 border border-white bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000] rounded-lg">
+    return <form className="p-4 bg-black border border-neutral-800 rounded-lg">
                 <div className="grid grid-cols-4 text-xl w-full">
                     <div className="mb-2">
                     <select 
@@ -89,7 +89,9 @@ export const Form = ({search , setSearch} : {search : SearchSchema , setSearch :
                     </select>
                     </div>
                     <div className="flex justify-end">
-                        <button onClick={handleReset} className="text-xs">Reset</button>
+                        <div>
+                        <button onClick={handleReset} className="text-xs border border-gray-800 rounded-lg p-2 hover:bg-neutral-800">Reset</button>
+                        </div>
                     </div>
                 </div>
             </form>

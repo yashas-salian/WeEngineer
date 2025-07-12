@@ -185,31 +185,67 @@ export const Search = () =>{
                     </div>
                 </div>
         <div className="">
-            <div className="w-120 grid grid-cols-2 pl-8 text-2xl font-semibold mb-4">
-                <div>
-                    Search for
-                    <FlipWords words={words}/>
-                    :
-                </div>
-                <div className="">
-                    <button className="rounded-full h-10 w-14 hover:bg-white" onClick={() => setFilter(prev => !prev)}>
-                        <Filter className="absolute top-31 left-69"/>
-                    </button>
-                    
-                </div>
-            </div>
+            <div className="w-full max-w-4xl">
+      <div className="bg-black p-8">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-white leading-tight">
+              Discover amazing <FlipWords words={words} />
+              <span className="text-white">.</span>
+            </h1>
+            <p className="text-gray-600 mt-2 text-lg">Use filters to find exactly what you're looking for</p>
+          </div>
+
+          <div className="flex-shrink-0">
+            <button
+              onClick={() => setFilter((prev) => !prev)}
+              className={`
+                group relative overflow-hidden rounded-xl px-6 py-3 
+                transition-all duration-300 ease-out
+                ${
+                  filter
+                    ? "bg-neutral-950 text-white"
+                    : "bg-white text-gray-700"
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <Filter
+                  className={`
+                    w-5 h-5 transition-all duration-300
+                    ${filter ? "text-white" : "text-gray-700 "}
+                  `}
+                />
+                <span className="font-semibold text-sm uppercase tracking-wide">
+                  {filter ? "Filters On" : "Filter"}
+                </span>
+              </div>
+
+              <div
+                className={`
+                absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 
+                transition-transform duration-300 ease-out
+                ${filter ? "translate-x-0" : "translate-x-full"}
+              `}
+                style={{ zIndex: -1 }}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
             {filter && 
                 <div className="mb-10 pl-60 pr-30 ">
                     <Form search={search} setSearch={setSearch}/>
                     <div className="flex justify-end">
-                      <button className="bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000]" onClick={handleSubmit}>Submit</button>
+                      <button className="bg-white text-black font-semibold rounded-xl p-2" onClick={handleSubmit}>Submit</button>
                     </div>
                 </div>  
             }
             
         </div>
         {pdf.length === 0 ? (
-          <Card className="ml-10 mr-10 mb-10 bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000]">
+          <Card className="ml-10 mr-10 mb-10 bg-neutral-950 border border-neutral-800">
             <CardContent className="py-12 text-center">
               <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground " />
               <h3 className="text-lg font-semibold mb-2 text-white">No files found</h3>
@@ -235,7 +271,7 @@ export const Search = () =>{
             
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
-              <Card key={index} className="group bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000] border border-white text-white hover:shadow-md transition-shadow">
+              <Card key={index} className="group bg-neutral-950 border border-neutral-800 text-white hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="aspect-[3/4] bg-muted rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                     <FileText className="h-12 w-12 text-muted-foreground" />
@@ -308,7 +344,7 @@ export const Search = () =>{
           <div className="ml-10 mr-10 space-y-2 ">
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
-              <Card key={index} className="bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000] border border-white text-white hover:shadow-sm transition-shadow mb-2">
+              <Card key={index} className="bg-neutral-950 border border-neutral-800 text-white hover:shadow-sm transition-shadow mb-2">
                 <CardContent className="p-4 ">
                   <div className="flex items-center space-x-4 ">
                     <div className="flex-shrink-0">

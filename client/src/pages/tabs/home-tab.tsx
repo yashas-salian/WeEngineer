@@ -1,7 +1,6 @@
 import { FileUpload } from "@/components/ui/file-upload"
 import {  useState } from "react"
 import axios from "axios"
-import { TextHoverEffect } from "@/components/ui/text-hover-effect"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Badge,  BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, Trash2, TrendingUp, User, Users } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -106,8 +105,9 @@ export const Home = () =>{
         
     }
 
+
     return <div className={cn("z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-1rem)]")}>
-                <div className="bg-black border border-white  rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
+                <div className="bg-black border border-neutral-800  rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
                     <div className="col-span-1 relative mt-2">
                         <SidebarTrigger className="text-4xl" onClick={()=>{
                           setSidebarOpen(prev => !prev)
@@ -122,7 +122,7 @@ export const Home = () =>{
                     </div>
                     <div className={cn("col-span-1 pl-10" , sidebarOpen ? "invisible" : "")}>
                         {/* <div className="flex gap-x-2 justify-center pt-1"> */}
-                            <div className="w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5"/></div>
+                            <div className="bg-white w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5 text-black"/></div>
                             {/* <div className="">Profile</div> */}
                         {/* </div> */}
                     </div>
@@ -135,89 +135,83 @@ export const Home = () =>{
                   exit={{ opacity: 0, y: -20 }}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mx-6 mb-8"
                 >
-                  <Card className="bg-white">
+                  <Card className="bg-neutral-950 border border-neutral-800">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-black text-sm font-medium">Total Files</p>
-                          <p className="text-3xl font-bold text-black">{stats.totalFiles}</p>
+                          <p className="text-white text-sm font-medium">Total Files</p>
+                          <p className="text-3xl font-bold text-white">{stats.totalFiles}</p>
                         </div>
-                        <BookOpen className="h-8 w-8 text-black" />
+                        <BookOpen className="h-8 w-8 text-white" />
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white">
+                  <Card className="bg-neutral-950 border border-neutral-800">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-black text-sm font-medium">Downloads</p>
-                          <p className="text-3xl font-bold text-black">{stats.totalDownloads}</p>
+                          <p className="text-white text-sm font-medium">PYQ's </p>
+                          <p className="text-3xl font-bold text-white">{stats.totalDownloads}</p>
                         </div>
-                        <Download className="h-8 w-8 text-black" />
+                        <Download className="h-8 w-8 text-white" />
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white">
+                  <Card className="bg-neutral-950 border border-neutral-800">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-black text-sm font-medium">Active Users</p>
-                          <p className="text-3xl font-bold text-black">{stats.activeUsers}</p>
+                          <p className="text-white text-sm font-medium">Notes</p>
+                          <p className="text-3xl font-bold text-white">{stats.activeUsers}</p>
                         </div>
-                        <Users className="h-8 w-8 text-black" />
+                        <Users className="h-8 w-8 text-white" />
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-white">
+                  <Card className="bg-neutral-950 border border-neutral-800">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-black text-sm font-medium">Growth</p>
-                          <p className="text-3xl font-bold text-black">+{stats.weeklyGrowth}%</p>
+                          <p className="text-white text-sm font-medium">Quiz</p>
+                          <p className="text-3xl font-bold text-white">{stats.weeklyGrowth}</p>
                         </div>
-                        <TrendingUp className="h-8 w-8 text-black" />
+                        <TrendingUp className="h-8 w-8 text-white" />
                       </div>
                     </CardContent>
                   </Card>
                 </motion.div>
               )}
             </AnimatePresence>
-                <div className="text-4xl font-bold pt-10 pb-10 pl-4 text-white">Contribute to your fellow engineer friends :</div>
-                <div className={cn("relative pt-0.5 pb-0.5 pr-1.5 mx-6 mb-20 rounded-lg transition-all duration-300 ease-in-out", sidebarOpen ? "w-[calc(100vw-20rem)]" : "w-[calc(100vw-4rem)]")}>
-
-                  <div className="absolute inset-0 rounded-lg overflow-hidden">
-                    <div
-                      className="absolute inset-[-50%] animate-spin-slow blur-sm opacity-70"
-                      style={{
-                        background: "conic-gradient(from 0deg, transparent, #444, #888, #ccc, #888, #444, transparent)"
-                      }}
-                    />
-                  </div>
-                      
-                  <div className="relative m-[2px] flex flex-col w-full gap-y-4 bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000] rounded-xl p-6 text-white shadow-lg rounded-lg pb-12 pt-6">
-                      
-                    <div className="mx-78 w-1/2">
+                <div className="text-3xl font-bold pt-10 pb-5 pl-12 text-white">Contribute to our library </div>
+                <div className={cn("relative pt-0.5 pb-0.5 pr-1.5 mx-6 mb-20 rounded-lg transition-all duration-300 ease-in-out", sidebarOpen ? "w-[calc(100vw-20rem)]" : "w-[calc(100vw-4rem)]")}>                      
+                  <div className="relative m-[2px] flex flex-col w-full gap-y-4 bg-neutral-950 border border-neutral-800 rounded-xl p-6 text-white shadow-lg rounded-lg pb-6 pt-6">
+                     <div className="flex justify-center">
+                      <div className="w-1/2">
                       <FileUpload onChange={handleOnUploadChange} />
                     </div>
+                      </div> 
+                    
                     {files[0] && status !== "uploading" && (
-                      <div className="flex justify-center">
+                      <div className="flex justify-center gap-x-10">
                         <button
                           onClick={handleOnUploadSubmit}
-                          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                          className="bg-white hover:bg-gray-300 text-black px-6 py-2 rounded-lg font-medium transition-colors"
                         >
                           Submit
                         </button>
+                        
                       </div>
                     )}
                   </div>
                 </div>
 
+            <div className="pl-12 text-3xl font-bold pb-5">Our library</div>
       
                 {pdf.length === 0 ? (
-          <Card className="ml-10 mr-10 mb-10 bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000]">
+          <Card className="ml-10 mr-10 mb-10 bg-neutral-950 border border-neutral-800">
             <CardContent className="py-12 text-center">
               <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground " />
               <h3 className="text-lg font-semibold mb-2 text-white">No files found</h3>
@@ -229,10 +223,10 @@ export const Home = () =>{
         ) : viewMode === "grid" ? (
            <div className="space-y-10 mb-10"> 
            <div className="">
-            <div className="pl-20 text-3xl font-semibold"><TextHoverEffect text="Behold our library of knowledge"/></div>
+            {/* <div className="pl-12 text-2xl font-bold">Our library</div> */}
             <div className="space-x-2 ml-300">
-                    <Button variant={viewMode === "grid" ? "default" : "outline"} size="sm" onClick={() => setViewMode("grid")}>
-                    <Grid3X3 className="h-4 w-4" />
+                    <Button className="bg-white" variant={viewMode === "grid" ? "default" : "outline"} size="sm" onClick={() => setViewMode("grid")}>
+                    <Grid3X3 className="h-4 w-4 text-black" />
                     </Button>
                     <Button size="sm" onClick={() => setViewMode("list")}>
                     <List className="h-4 w-4" />
@@ -243,7 +237,7 @@ export const Home = () =>{
             
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
-              <Card key={index} className="group bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000] border border-white text-white hover:shadow-md transition-shadow">
+              <Card key={index} className="group bg-neutral-950 border border-neutral-800 text-white hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="aspect-[3/4] bg-muted rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                     <FileText className="h-12 w-12 text-muted-foreground" />
@@ -279,17 +273,17 @@ export const Home = () =>{
                     <h3 className="font-medium text-sm line-clamp-2" title={file.pdf_name}>
                       {file.pdf_name}
                     </h3>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{2}</span>
+                    <div className="flex text-gray-400 items-center justify-between text-xs text-muted-foreground">
+                      <span>2Mb</span>
                       <Badge className="text-xs">
                         {file.college_name}
                       </Badge>
                     </div>
-                    <div className="flex items-center text-xs text-muted-foreground">
+                    <div className="flex text-gray-400 items-center text-xs text-muted-foreground">
                       <Calendar className="h-3 w-3 mr-1" />
                       {file.year}
                     </div>
-                    <div className="flex items-center text-xs text-muted-foreground">
+                    <div className="flex text-gray-400 items-center text-xs text-muted-foreground">
                       <NotebookTabs className="h-3 w-3 mr-1" />
                       {file.Examtype}
                     </div>
@@ -303,20 +297,20 @@ export const Home = () =>{
         ) : (
             <div className="space-y-10 mb-10">
                 <div className="">
-            <div className="pl-20 text-3xl font-semibold"><TextHoverEffect text="Behold our library of knowledge"/></div>
+            <div className="pl-20 text-3xl font-semibold">Behold our library of knowledge</div>
             <div className="space-x-2 ml-300">
-                    <Button size="sm" onClick={() => setViewMode("grid")}>
-                    <Grid3X3 className="h-4 w-4" />
+                    <Button className="bg-black" size="sm" onClick={() => setViewMode("grid")}>
+                    <Grid3X3 className="h-4 w-4 text-white" />
                     </Button>
-                    <Button variant={viewMode === "list" ? "default" : "outline"} size="sm" onClick={() => setViewMode("list")}>
-                    <List className="h-4 w-4" />
+                    <Button className="bg-white" variant={viewMode === "list" ? "default" : "outline"} size="sm" onClick={() => setViewMode("list")}>
+                    <List className="h-4 w-4 text-black" />
                     </Button>
             </div>
             </div>
           <div className="ml-10 mr-10 space-y-2 ">
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
-              <Card key={index} className="bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#000000] border border-white text-white hover:shadow-sm transition-shadow mb-2">
+              <Card key={index} className="bg-neutral-950 border border-neutral-800 text-white hover:shadow-sm transition-shadow mb-2">
                 <CardContent className="p-4 ">
                   <div className="flex items-center space-x-4 ">
                     <div className="flex-shrink-0">
@@ -326,8 +320,8 @@ export const Home = () =>{
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium truncate">{file.pdf_name}</h3>
-                      <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
-                        <span>{2}</span>
+                      <div className="flex text-gray-400 items-center space-x-4 text-sm text-muted-foreground mt-1">
+                        <span>2Mb</span>
                         <span>•</span>
                         <span>{file.college_name}</span>
                         <span>•</span>

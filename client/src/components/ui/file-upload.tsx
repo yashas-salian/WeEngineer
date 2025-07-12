@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React, { useRef, useState } from "react";
+import  { useRef, useState } from "react";
 import { motion } from "motion/react";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
@@ -41,6 +41,9 @@ export const FileUpload = ({
   const handleClick = () => {
     fileInputRef.current?.click();
   };
+  const handleOnDelete = () =>{
+      setFiles([])
+    }
 
   const { getRootProps, isDragActive } = useDropzone({
     multiple: false,
@@ -51,7 +54,9 @@ export const FileUpload = ({
     },
   });
 
+
   return (
+    <div>
     <div className="w-full bg-neutral-800 border border-dashed rounded-lg" {...getRootProps()}>
       <motion.div
         onClick={handleClick}
@@ -86,7 +91,7 @@ export const FileUpload = ({
                     "shadow-sm"
                   )}
                 >
-                  <div className="flex justify-between w-full items-center gap-4">
+                  <div className="flex justify-between w-full items-center gap-4 mt-2">
                     <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -165,6 +170,7 @@ export const FileUpload = ({
         </div>
       </motion.div>
     </div>
+    </div>
   );
 };
 
@@ -189,5 +195,6 @@ export function GridPattern() {
         })
       )}
     </div>
+    
   );
 }
