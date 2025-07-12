@@ -41,6 +41,8 @@ interface data{
     Examtype : string,
     Url : string,
     secure_Url : string,
+    size : number,
+    subject_name : string
 }
 export const Search = () =>{
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -274,41 +276,19 @@ export const Search = () =>{
               <Card key={index} className="group bg-neutral-950 border border-neutral-800 text-white hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="aspect-[3/4] bg-muted rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
-                    <FileText className="h-12 w-12 text-muted-foreground" />
-                    <div className="absolute top-2 right-2">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
+                    <iframe 
+                      src = {`${file.secure_Url}#page=1`}
+                      height={"500px"}
+                      >
+                    </iframe>
                   </div>
                   <div className="space-y-2">
                     <h3 className="font-medium text-sm line-clamp-2" title={file.pdf_name}>
                       {file.pdf_name}
                     </h3>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{2}</span>
+                      <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
+
                       <Badge className="text-xs">
                         {file.college_name}
                       </Badge>
@@ -349,13 +329,18 @@ export const Search = () =>{
                   <div className="flex items-center space-x-4 ">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                        <FileText className="h-6 w-6 text-muted-foreground" />
+                        <iframe 
+                          src = {`${file.secure_Url}#page=1`}
+                           width={"60px"}
+                          height={"50px"}
+                        >
+                        </iframe>
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium truncate">{file.pdf_name}</h3>
                       <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
-                        <span>{2}</span>
+                        <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
                         <span>•</span>
                         <span>{file.college_name}</span>
                         <span>•</span>

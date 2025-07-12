@@ -9,6 +9,7 @@ export class uploadController{
             const year = formData.get("year")?.toString() || ""
             const Examtype = formData.get("Examtype")?.toString() || ""
             const college_name = formData.get("college_name")?.toString() || ""
+            const subject_name = formData.get("subject_name")?.toString() || ""
             const file = formData.get('file') as File
             if (!file) throw new Error ("No file found")
             
@@ -37,7 +38,9 @@ export class uploadController{
                     year,
                     Examtype, 
                     Url : data.url,
-                    secure_Url : data.secure_url
+                    secure_Url : data.secure_url,
+                    size : data.bytes,
+                    subject_name
                 }
             })
 

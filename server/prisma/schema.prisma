@@ -24,9 +24,11 @@ model User{
 model Pdf{
   ID String @id
   college_name String
+  subject_name String
   pdf_name String
   year String
   Examtype String
   Url String
   secure_Url String
+  size Int
 }

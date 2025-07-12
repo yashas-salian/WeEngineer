@@ -8,6 +8,9 @@ interface data{
     Examtype : string,
     Url : string,
     secure_Url : string,
+    size : number,
+    subject_name : string
+
 }
 export const getPdfs = () =>{
     const [pdf , setpdf] = useState<data[]>([])
