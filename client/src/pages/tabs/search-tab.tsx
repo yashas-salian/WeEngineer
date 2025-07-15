@@ -18,7 +18,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { getPdfs } from "../../hooks/use-pdf"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import logo from "../../images/WeE_logo.png"
@@ -286,20 +285,26 @@ export const Search = () =>{
                     <h3 className="font-medium text-sm line-clamp-2" title={file.pdf_name}>
                       {file.pdf_name}
                     </h3>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
-
-                      <Badge className="text-xs">
-                        {file.college_name}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center text-xs text-muted-foreground">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {file.year}
-                    </div>
-                    <div className="flex items-center text-xs text-muted-foreground">
-                      <NotebookTabs className="h-3 w-3 mr-1" />
-                      {file.Examtype}
+                    <div className="grid grid-cols-2">
+                      <div className="">
+                        <div className="flex mb-2 text-gray-400 items-center justify-between text-xs text-muted-foreground">
+                            <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
+                        </div>
+                        <div className="flex text-gray-400 items-center justify-between text-xs text-muted-foreground">
+                          {/* <School className="h-3 w-3 mr-1"/> */}  
+                          <span>{file.college_name}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex mb-2 text-gray-400 items-center text-xs text-muted-foreground">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {file.year}
+                        </div>
+                        <div className="flex text-gray-400 items-center text-xs text-muted-foreground">
+                          <NotebookTabs className="h-3 w-3 mr-1" />
+                          {file.Examtype}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

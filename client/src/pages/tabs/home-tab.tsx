@@ -250,21 +250,28 @@ export const Home = () =>{
                     <h3 className="font-medium text-sm line-clamp-2" title={file.pdf_name}>
                       {file.pdf_name}
                     </h3>
-                    <div className="flex text-gray-400 items-center justify-between text-xs text-muted-foreground">
-                        <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
-
-                      <Badge className="text-xs">
-                        {file.college_name}
-                      </Badge>
+                    <div className="grid grid-cols-2">
+                      <div className="">
+                        <div className="flex mb-2 text-gray-400 items-center justify-between text-xs text-muted-foreground">
+                            <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
+                        </div>
+                        <div className="flex text-gray-400 items-center justify-between text-xs text-muted-foreground">
+                          {/* <School className="h-3 w-3 mr-1"/> */}  
+                          <span>{file.college_name}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex mb-2 text-gray-400 items-center text-xs text-muted-foreground">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {file.year}
+                        </div>
+                        <div className="flex text-gray-400 items-center text-xs text-muted-foreground">
+                          <NotebookTabs className="h-3 w-3 mr-1" />
+                          {file.Examtype}
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex text-gray-400 items-center text-xs text-muted-foreground">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {file.year}
-                    </div>
-                    <div className="flex text-gray-400 items-center text-xs text-muted-foreground">
-                      <NotebookTabs className="h-3 w-3 mr-1" />
-                      {file.Examtype}
-                    </div>
+                      
                   </div>
                 </CardContent>
               </Card>
@@ -305,7 +312,7 @@ export const Home = () =>{
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium truncate">{file.pdf_name}</h3>
                       <div className="flex text-gray-400 items-center space-x-4 text-sm text-muted-foreground mt-1">
-                        <span>{(file.size / 1024).toFixed(2)} Mb</span>
+                        <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
                         <span>•</span>
                         <span>{file.college_name}</span>
                         <span>•</span>

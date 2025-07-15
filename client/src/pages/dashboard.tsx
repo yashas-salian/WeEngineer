@@ -4,7 +4,7 @@ import { Search } from "./tabs/search-tab"
 import { Footer } from "@/components/footer"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar, type tabStatus } from "@/components/ui/app-sidebar"
-import { AnimatedBackground } from "@/components/animated-background"
+import { Quiz } from "./tabs/Quiz-tab"
 
 
 export const Dashboard = () =>{
@@ -21,6 +21,10 @@ return <div className="flex relative bg-black min-h-screen overflow-hidden trans
       {
         tab == "Search" &&
         <Search/>
+      }
+      {
+        tab == "Quiz" &&
+        <Quiz/>
       }
     <Footer/>
 

@@ -14,7 +14,8 @@
     "CLOUDINARY_API_SECRET" : "QFowENI8ng5-obWxRuRCUMWtKZA",
     "CLOUDINARY_API_KEY" : "568924778519928",
     "CLOUDINARY_CLOUD_NAME" : "dtxkx3sji",
-    "CLOUDINARY_UPLOAD_PRESET" : "yashas_cloudinary"
+    "CLOUDINARY_UPLOAD_PRESET" : "yashas_cloudinary",
+    "GOOGLE_GEMINI_API_KEY" : "AIzaSyB-AnI76wtDZ4drIwWouSDyCezilPdlUmk"
   },
   // "kv_namespaces": [
   //   {
