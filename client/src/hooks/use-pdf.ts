@@ -10,22 +10,35 @@ interface data{
     secure_Url : string,
     size : number,
     subject_name : string
-
 }
 export const getPdfs = () =>{
     const [pdf , setpdf] = useState<data[]>([])
     const [error, setError] = useState("")
     const getAllPdfs = useCallback (async () => {
         try {
-        const res = await axios.get("http://127.0.0.1:8787/get-all-pdf")
-        setpdf(res.data.response)
-        } catch (error) {
-            setError(error as string)
+            const res = await axios.get("http://127.0.0.1:8787/get-all-pdf")
+            setpdf(res.data.response)
+            } catch (error) {
+                setError(error as string)
         }},[])
 
         useEffect(() => {
             getAllPdfs()
         },[getAllPdfs])
+
+
+        // const getQuestions = useCallback (async() =>{
+        //     try {
+        //         const res = await axios.get("http://127.0.0.1:8787/get-all-pdf")
+        //         setpdf(res.data.response)
+        //         } catch (error) {
+        //             setError(error as string)
+        //         }
+        //     },[])
+
+        // useEffect(() => {
+        //     getAllPdfs()
+        // },[getQuestions])
 
         return { pdf }
 }
