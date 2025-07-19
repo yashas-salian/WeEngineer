@@ -153,7 +153,7 @@ export const Quiz = () => {
   const question = quizData.questions[currentQuestion]
 
   return ( 
-    <div className="items-center max-w-4xl mx-auto p-6 space-y-6">
+    <div className="mx-auto p-6 space-y-6">
       {/* Header */}
       <Card>
         <CardHeader>

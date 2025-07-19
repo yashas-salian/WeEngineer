@@ -49,7 +49,7 @@ export function AppSidebar({
   setTab: React.Dispatch<React.SetStateAction<tabStatus>>
 }) {
   return (
-    <Sidebar className="bg-black">
+    <Sidebar className="bg-[#030f22]">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-4xl mb-10">WeE</SidebarGroupLabel>

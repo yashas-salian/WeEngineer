@@ -10,7 +10,7 @@ import logo from "../images/WeE_logo.png"
     });
   };
 export const Footer = () =>{
-    return <div className="bg-black z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6 py-6 md:py-8 w-full text-white border-t-2 border-t-white">
+    return <div className="bg-[#030f22] z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6 py-6 md:py-8 w-full text-white border-t-2 border-t-white">
             {/* Home Section */}
             <div className="flex flex-col items-center md:items-start">
             <b className="text-2xl mb-4 text-white  ">Quick links</b>

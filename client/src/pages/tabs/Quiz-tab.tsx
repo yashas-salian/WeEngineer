@@ -42,15 +42,15 @@ export const QuizTab = () => {
   const isFormValid = difficulty && topic
 
   return (
-    <div className={cn("z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out mb-10", sidebarOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-1rem)]")}>
+    <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out ", sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
         <ToastContainer/>
-        <div className="bg-black border border-white  rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
-                    <div className="col-span-1 relative mt-2">
-                        <SidebarTrigger className="text-4xl" onClick={()=>{
+        <div className="bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
+                    <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
+                        <SidebarTrigger className="text-4xl text-black" onClick={()=>{
                           setSidebarOpen(prev => !prev)
                         }}/>
                     </div>
-                    {/* <div className="col-span-1"></div> */}
+                    <div className="col-span-1"></div>
                     <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
                       <div className="flex gap-x-2">
                         <img src={logo} alt="Logo" className="w-12 h-12"></img>
@@ -59,13 +59,13 @@ export const QuizTab = () => {
                     </div>
                     <div className={cn("col-span-1 pl-10" , sidebarOpen ? "invisible" : "")}>
                         {/* <div className="flex gap-x-2 justify-center pt-1"> */}
-                            <div className="w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5"/></div>
+                            <div className="bg-white w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5 text-black"/></div>
                             {/* <div className="">Profile</div> */}
                         {/* </div> */}
                     </div>
                 </div>
       <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
+        <div data-aos="zoom-in" className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Quiz Setup</h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
             Configure your quiz preferences and get ready to test your knowledge!
@@ -74,7 +74,7 @@ export const QuizTab = () => {
 
         <div className="grid gap-6">
           {/* Difficulty Selection */}
-          <Card className="bg-neutral-950 border border-neutral-800">
+          <Card data-aos="fade-up" className="bg-[#030f22]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Target className="h-5 w-5 text-orange-500" />
@@ -112,7 +112,7 @@ export const QuizTab = () => {
           </Card>
 
           {/* Topic Selection */}
-          <Card className="bg-neutral-950 border border-neutral-800">
+          <Card data-aos="fade-up" className="bg-[#030f22]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-blue-500" />
@@ -141,7 +141,7 @@ export const QuizTab = () => {
           </Card>
 
           {/* Time Limit */}
-          <Card className="bg-neutral-950 border border-neutral-800">
+          <Card data-aos="fade-up" className="bg-[#030f22]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-purple-500" />
@@ -168,7 +168,7 @@ export const QuizTab = () => {
           </Card>
 
           {/* Number of Questions */}
-          <Card className="bg-neutral-950 border border-neutral-800">
+          <Card data-aos="fade-up" className="bg-[#030f22]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Hash className="h-5 w-5 text-green-500" />
@@ -202,7 +202,7 @@ export const QuizTab = () => {
           </Card>
 
           {/* Start Quiz Button */}
-          <Card className="bg-neutral-950 border border-neutral-800">
+          <Card data-aos="fade-up" className="bg-[#030f22]">
             <CardContent className="pt-6">
               <Button
                 onClick={handleStartQuiz}
@@ -221,7 +221,7 @@ export const QuizTab = () => {
 
           {/* Quiz Summary */}
           {isFormValid && (
-            <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+            <Card data-aos="fade-up" className="bg-[#030f22]">
               <CardHeader>
                 <CardTitle className="text-blue-800 dark:text-blue-200">Quiz Summary</CardTitle>
               </CardHeader>

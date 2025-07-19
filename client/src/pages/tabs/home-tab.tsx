@@ -1,9 +1,9 @@
 import { FileUpload } from "@/components/ui/file-upload"
-import {  useState } from "react"
+import {  useEffect, useState } from "react"
 import axios from "axios"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Badge,  BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, Trash2, TrendingUp, User, Users } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Badge, BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, Sparkles, Trash2, Upload, User } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,9 +23,11 @@ import { getPdfs } from "../../hooks/use-pdf"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import logo from "../../images/WeE_logo.png"
-import { motion, AnimatePresence } from "framer-motion"
 import { Link } from "react-router-dom"
-
+import Aos from "aos"
+import 'aos/dist/aos.css';
+import robot from "../../components/images/robot-image.png"
+import { StatusCard } from "@/components/status-card"
 export const Home = () =>{
     type uploadStatus = "idle" | "uploading" | "error" | "success"
     const [files , setFiles] = useState<File[]>([]);
@@ -40,14 +42,6 @@ export const Home = () =>{
     const paginatedPdf = pdf.slice(firstPageIndex,lastPostIndex)
     const blockPerPage = 4
     const [sidebarOpen, setSidebarOpen] = useState(true)
-    const [showStats, setShowStats] = useState(true)
-
-    const stats = {
-      totalFiles: pdf.length,
-      totalDownloads: 1247,
-      activeUsers: 89,
-      weeklyGrowth: 12.5,
-    }
 
     const getVisiblePages = () => {
       let tempPages = []
@@ -105,16 +99,21 @@ export const Home = () =>{
         }
         
     }
+  useEffect(() => {
+      Aos.init({
+        duration: 1000,  // animation duration in ms
+        once: true       // animate only once when scrolling
+      });
+    }, []);
 
-
-    return <div className={cn("z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-1rem)]")}>
-                <div className="bg-black border border-neutral-800  rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
-                    <div className="col-span-1 relative mt-2">
-                        <SidebarTrigger className="text-4xl" onClick={()=>{
+    return <div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+                <div className="bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
+                    <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
+                        <SidebarTrigger className="text-4xl text-black" onClick={()=>{
                           setSidebarOpen(prev => !prev)
                         }}/>
                     </div>
-                    {/* <div className="col-span-1"></div> */}
+                    <div className="col-span-1"></div>
                     <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
                       <div className="flex gap-x-2">
                         <img src={logo} alt="Logo" className="w-12 h-12"></img>
@@ -128,73 +127,69 @@ export const Home = () =>{
                         {/* </div> */}
                     </div>
                 </div>
-      <AnimatePresence>
-//               {showStats && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mx-6 mb-8"
-                >
-                  <Card className="bg-neutral-950 border border-neutral-800">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-white text-sm font-medium">Total Files</p>
-                          <p className="text-3xl font-bold text-white">{stats.totalFiles}</p>
-                        </div>
-                        <BookOpen className="h-8 w-8 text-white" />
-                      </div>
-                    </CardContent>
-                  </Card>
+            <StatusCard/>
 
-                  <Card className="bg-neutral-950 border border-neutral-800">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-white text-sm font-medium">PYQ's </p>
-                          <p className="text-3xl font-bold text-white">{stats.totalDownloads}</p>
-                        </div>
-                        <Download className="h-8 w-8 text-white" />
-                      </div>
-                    </CardContent>
-                  </Card>
+            {/* <EngineeringMachine/> */}
+            
+          <Card data-aos="fade-up" className="bg-[#030f22] mr-4 ml-4 overflow-hidden">
+          <CardContent className="p-0">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+              <div className="lg:col-span-2 p-8">
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2">
+                      <Sparkles className="h-8 w-8 text-blue-400" />
+                      Hi! we are WeE
+                    </h1>
+                    <p className="text-lg text-slate-300 leading-relaxed">
+                      At WeE, we make learning simple and accessible. We provide a platform where students can:
+                    </p>
+                  </div>
 
-                  <Card className="bg-neutral-950 border border-neutral-800">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-white text-sm font-medium">Notes</p>
-                          <p className="text-3xl font-bold text-white">{stats.activeUsers}</p>
-                        </div>
-                        <Users className="h-8 w-8 text-white" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <ul className="space-y-3 text-slate-300">
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                      <span>Upload and access Previous Year Questions (PYQs)</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                      <span>Share and read study notes</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                      <span>Attempt quizzes to test their knowledge</span>
+                    </li>
+                  </ul>
 
-                  <Card className="bg-neutral-950 border border-neutral-800">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-white text-sm font-medium">Quiz</p>
-                          <p className="text-3xl font-bold text-white">{stats.weeklyGrowth}</p>
-                        </div>
-                        <TrendingUp className="h-8 w-8 text-white" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )}
-            </AnimatePresence>
-                <div className="text-3xl font-bold pt-10 pb-5 pl-12 text-white">Contribute to our library </div>
-                <div className={cn("relative pt-0.5 pb-0.5 pr-1.5 mx-6 mb-20 rounded-lg transition-all duration-300 ease-in-out", sidebarOpen ? "w-[calc(100vw-20rem)]" : "w-[calc(100vw-4rem)]")}>                      
-                  <div className="relative m-[2px] flex flex-col w-full gap-y-4 bg-neutral-950 border border-neutral-800 rounded-xl p-6 text-white shadow-lg rounded-lg pb-6 pt-6">
-                     <div className="flex justify-center">
-                      <div className="w-1/2">
-                      <FileUpload onChange={handleOnUploadChange} />
-                    </div>
-                      </div> 
-                    
+                  <p className="text-slate-400 italic">
+                    Whether you're preparing for exams or revising key concepts, WeE is here to support your academic
+                    journey.
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-span-1 flex justify-end">
+              <div className="col-span-1 w-50 flex justify-end mt-20 mr-4 bg-[#19376d] rounded-full animate-bounce duration-[5000ms]">
+                <img src={robot} className="w-50 h-50"/>
+              </div>
+            </div>
+            </div>
+          </CardContent>
+        </Card>
+
+          <Card data-aos="zoom-in-up" className="bg-slate-800/50 border-slate-700 mt-10 mr-4 ml-4">
+          <CardHeader className="text-center pb-6">
+            <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
+              <Upload className="h-8 w-8 text-blue-400" />
+              Contribute to our library
+            </CardTitle>
+            <p className="text-slate-400">Share your knowledge with fellow students</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 items-center">
+              <div className="flex justify-center space-y-6">
+                <FileUpload onChange={handleOnUploadChange}/>
+
                     {files[0] && status !== "uploading" && (
                       <div className="flex justify-center gap-x-10">
                         <button
@@ -206,13 +201,34 @@ export const Home = () =>{
                         
                       </div>
                     )}
-                  </div>
-                </div>
 
-            <div className="pl-12 text-3xl font-bold pb-5">Our library</div>
+                {status === "success" && (
+                  <div className="p-4 bg-green-600/20 border border-green-600/30 rounded-lg">
+                    <p className="text-green-400 font-medium">File uploaded successfully!</p>
+                  </div>
+                )}
+
+                {status === "error" && (
+                  <div className="p-4 bg-red-600/20 border border-red-600/30 rounded-lg">
+                    <p className="text-red-400 font-medium">Upload failed. Please try again.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+            <div className="flex items-center gap-4 mt-20 ml-10">
+              <div className="text-blue-400">
+                <BookOpen size={40} />
+              </div>
+              <div className="text-3xl font-bold text-text-white">
+                Our Library
+              </div>
+            </div>
+
       
                 {pdf.length === 0 ? (
-          <Card className="ml-10 mr-10 mb-10 bg-neutral-950 border border-neutral-800">
+          <Card className="ml-10 mr-10 mb-10 bg-slate-800/50 border-slate-700">
             <CardContent className="py-12 text-center">
               <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground " />
               <h3 className="text-lg font-semibold mb-2 text-white">No files found</h3>
@@ -234,11 +250,11 @@ export const Home = () =>{
                     </Button>
             </div>
             </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ml-10 mr-10 ">
+          <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ml-10 mr-10 ">
             
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
-              <Card key={index} className="group bg-neutral-950 border border-neutral-800 text-white hover:shadow-md transition-shadow">
+              <Card key={index}  className="group bg-[#030f22] text-white hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="aspect-[3/4] bg-muted rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
                     <iframe 
@@ -282,7 +298,7 @@ export const Home = () =>{
         ) : (
             <div className="space-y-10 mb-10">
                 <div className="">
-            <div className="pl-20 text-3xl font-semibold">Behold our library of knowledge</div>
+            {/* <div className="pl-20 text-3xl font-semibold">Behold our library of knowledge</div> */}
             <div className="space-x-2 ml-300">
                     <Button className="bg-black" size="sm" onClick={() => setViewMode("grid")}>
                     <Grid3X3 className="h-4 w-4 text-white" />
@@ -295,7 +311,7 @@ export const Home = () =>{
           <div className="ml-10 mr-10 space-y-2 ">
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
-              <Card key={index} className="bg-neutral-950 border border-neutral-800 text-white hover:shadow-sm transition-shadow mb-2">
+              <Card key={index} className="bg-[#030f22] text-white hover:shadow-sm transition-shadow mb-2">
                 <CardContent className="p-4 ">
                   <div className="flex items-center space-x-4 ">
                     <div className="flex-shrink-0">
@@ -386,7 +402,9 @@ export const Home = () =>{
           </Pagination>
         </div>
       }
+      {/* <BlueRobot/> */}
             </div>
             
 }
 
+  
