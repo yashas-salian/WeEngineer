@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "lucide-react"
 import { Clock, CheckCircle, XCircle, RotateCcw } from "lucide-react"
+import { cn } from "@/lib/utils";
 
 
 
@@ -77,7 +78,7 @@ export const Quiz = () => {
     const percentage = Math.round((score / quizData.questions.length) * 100)
 
     return (
-      <div className="w-full mx-auto p-6 space-y-6">
+      <div className=" w-full mx-auto p-6 space-y-6">
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Quiz Results</CardTitle>
@@ -153,9 +154,9 @@ export const Quiz = () => {
   const question = quizData.questions[currentQuestion]
 
   return ( 
-    <div className="mx-auto p-6 space-y-6">
+    <div className="bg-[#04152d] mx-auto p-6 space-y-6">
       {/* Header */}
-      <Card>
+      <Card className="bg-[#030f22]">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -174,18 +175,20 @@ export const Quiz = () => {
       </Card>
 
       {/* Question */}
-      <Card>
+      <Card className="">
         <CardHeader>
-          <CardTitle className="text-lg leading-relaxed">{question.question}</CardTitle>
+          <CardTitle className="bg-slate-800/50 rounded-xl p-3 text-lg leading-relaxed ">{question.question}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3">
             {question.options.map((option: any, index: any) => (
               <Button
                 key={index}
-                variant={selectedAnswers[currentQuestion] === option ? "default" : "outline"}
-                className="justify-start text-left h-auto p-4 whitespace-normal"
-                onClick={() => handleAnswerSelect(option)}
+                // variant={selectedAnswers[currentQuestion] === option ? "bg-white text-[#04152d]" : "outline"}
+                className={cn("justify-start text-left h-auto p-4 whitespace-normal bg-[#030f22]",selectedAnswers[currentQuestion] === option ? "bg-white text-[#04152d]": "")}
+                onClick={() => {
+                  handleAnswerSelect(option)
+                }}
               >
                 <span className="font-medium mr-3">{String.fromCharCode(65 + index)}.</span>
                 {option}
@@ -203,7 +206,7 @@ export const Quiz = () => {
               Previous
             </Button>
 
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               {quizData.questions.map((_: any, index: any) => (
                 <Button
                   key={index}
@@ -215,7 +218,7 @@ export const Quiz = () => {
                   {index + 1}
                 </Button>
               ))}
-            </div>
+            </div> */}
 
             {currentQuestion === quizData.questions.length - 1 ? (
               <Button onClick={handleSubmitQuiz}>Submit Quiz</Button>
