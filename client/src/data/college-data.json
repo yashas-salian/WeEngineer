@@ -1,0 +1,75 @@
+{
+  "engineering_colleges_pune": [
+    {
+      "name": "College of Engineering, Pune (CoEP)",
+      "type": "Autonomous / State",
+      "established": 1854
+    },
+    {
+      "name": "Vishwakarma Institute of Technology (VIT)",
+      "type": "Private Autonomous",
+      "established": 1983
+    },
+    {
+      "name": "Pune Institute of Computer Technology (PICT)",
+      "type": "Private Autonomous",
+      "established": null
+    },
+    {
+      "name": "Army Institute of Technology (AIT)",
+      "type": "Private",
+      "established": null
+    },
+    {
+      "name": "MIT Academy of Engineering (MIT AOE)",
+      "type": "Private Autonomous",
+      "established": 1999
+    },
+    {
+      "name": "Bharati Vidyapeeth Deemed University College of Engineering",
+      "type": "Deemed University",
+      "established": 1983
+    },
+    {
+      "name": "Dhole Patil College of Engineering (DPCOE)",
+      "type": "Private",
+      "established": 2008
+    },
+    {
+      "name": "Pimpri Chinchwad College of Engineering (PCCOE)",
+      "type": "Private Autonomous",
+      "established": 1999
+    },
+    {
+      "name": "Dr. D. Y. Patil College of Engineering, Pimpri",
+      "type": "Private",
+      "established": 2014
+    },
+    {
+      "name": "Cummins College of Engineering for Women",
+      "type": "Private Autonomous",
+      "established": 1991
+    },
+    {
+      "name": "Symbiosis Institute of Technology (SIT)",
+      "type": "Deemed University",
+      "established": 2008
+    },
+    {
+      "name": "AISSMS College of Engineering",
+      "type": "Government / Autonomous",
+      "established": null
+    },
+    {
+      "name": "MIT World Peace University Faculty of Engineering",
+      "type": "Deemed University",
+      "established": null
+    },
+    {
+      "name": "Rajarshi Shahu College of Engineering",
+      "type": "Private Autonomous",
+      "established": null
+    }
+  ]
+}
+    

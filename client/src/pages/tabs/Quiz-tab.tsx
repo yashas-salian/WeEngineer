@@ -201,27 +201,11 @@ export const QuizTab = () => {
             </CardContent>
           </Card>
 
-          {/* Start Quiz Button */}
-          <Card data-aos="fade-up" className="bg-[#030f22]">
-            <CardContent className="pt-6">
-              <Button
-                onClick={handleStartQuiz}
-                disabled={!isFormValid}
-                className="w-full h-12 text-lg font-semibold"
-                size="lg"
-              >
-                <Play className="h-5 w-5 mr-2" />
-                Start Quiz
-              </Button>
-              {!isFormValid && (
-                <p className="text-sm text-gray-500 text-center mt-2">Please select difficulty and topic to continue</p>
-              )}
-            </CardContent>
-          </Card>
+          
 
           {/* Quiz Summary */}
           {isFormValid && (
-            <Card data-aos="fade-up" className="bg-[#030f22]">
+            <Card data-aos="fade-up" className="bg-[#030f22] mb-5">
               <CardHeader>
                 <CardTitle className="text-blue-800 dark:text-blue-200">Quiz Summary</CardTitle>
               </CardHeader>
@@ -243,6 +227,18 @@ export const QuizTab = () => {
               </CardContent>
             </Card>
           )}
+          {/* Start Quiz Button */}
+          <div className="flex justify-center">
+            <Button
+                  onClick={handleStartQuiz}
+                  disabled={!isFormValid}
+                  className="bg-white text-[#030f22] w-1/2 h-12 text-lg font-semibold mb-10 hover:bg-white/80 hover:cursor-pointer"
+                  size="lg"
+                >
+                  <Play className="h-5 w-5 mr-2" />
+                  Start Quiz
+            </Button>
+          </div>
         </div>
       </div>
     </div>

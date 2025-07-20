@@ -1,8 +1,8 @@
 import { FileUpload } from "@/components/ui/file-upload"
-import {  useEffect, useState } from "react"
+import {  useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Badge, BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, Sparkles, Trash2, Upload, User } from "lucide-react"
+import { Badge, BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, SearchIcon, Sparkles, Trash2, Upload, User } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   DropdownMenu,
@@ -28,8 +28,21 @@ import Aos from "aos"
 import 'aos/dist/aos.css';
 import robot from "../../components/images/robot-image.png"
 import { StatusCard } from "@/components/status-card"
-export const Home = () =>{
+import { toast, ToastContainer } from "react-fox-toast"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import colleges from "../../data/college-data.json"
+import subjects from "../../data/subjects-data.json"
+import { EngineeringMachine } from "@/components/simple-cogs"
+
+
+export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetStateAction<boolean>> }) =>{
     type uploadStatus = "idle" | "uploading" | "error" | "success"
+    interface uploadSchma {
+      college_name : string,
+      year : string,
+      subject : string,
+      exam_type : string
+    }
     const [files , setFiles] = useState<File[]>([]);
     const [status , setStatus] = useState< uploadStatus >("idle")
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -42,7 +55,14 @@ export const Home = () =>{
     const paginatedPdf = pdf.slice(firstPageIndex,lastPostIndex)
     const blockPerPage = 4
     const [sidebarOpen, setSidebarOpen] = useState(true)
-
+    const [uploadData , setUploadData] = useState<uploadSchma>({
+      college_name : "",
+      year : "",
+      subject : "",
+      exam_type : ""
+    })
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
     const getVisiblePages = () => {
       let tempPages = []
       let maxBlocks = Math.min(currentPage + blockPerPage, totalPages)
@@ -80,33 +100,59 @@ export const Home = () =>{
             setFiles(files)
         // console.log(files)
     }
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     const handleOnUploadSubmit = async () =>{
         if (!files) return
-
+        if (uploadData.college_name === "" || uploadData.exam_type === "" || uploadData.subject === "" || uploadData.year === ""){
+          toast.error("Please fill all the fields correctly",{
+            position : "top-center"
+          })
+          return
+        }
         setStatus("uploading")
+        setLoading  (true)
         const formData = new FormData()
         formData.append("file" , files[0])
-        formData.append("year","2025-2026")
-        formData.append("Examtype","Normal")
-        formData.append("college_name","Aissms ioit")
-        formData.append("subject_name","AI")
+        formData.append("year", uploadData.year)
+        formData.append("Examtype",uploadData.exam_type)
+        formData.append("college_name",uploadData.college_name)
+        formData.append("subject_name",uploadData.subject)
         try {
             const response = await axios.post("http://127.0.0.1:8787/upload", formData)
-            setStatus("success")
             console.log(response)
+            if (response.data.Message === "file uploaded successfully"){
+              setStatus("success")
+              toast.success("File uploaded successfully",{
+                position : "top-center"
+              })
+              setFiles([])
+              // handleOnUploadChange(files)
+            }
+            if(response.data.Message === "Some error occured"){
+              setStatus("error")
+              toast.error("Some error occured",{
+                position : "top-center"
+              })
+            }
+
         } catch (error) {
             setStatus("error")
+        }
+        finally{
+          setLoading(false)
         }
         
     }
   useEffect(() => {
       Aos.init({
-        duration: 1000,  // animation duration in ms
-        once: true       // animate only once when scrolling
+        duration: 1000,  
+        once: true   
       });
     }, []);
 
-    return <div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+                <ToastContainer/>
                 <div className="bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
                     <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
                         <SidebarTrigger className="text-4xl text-black" onClick={()=>{
@@ -186,38 +232,101 @@ export const Home = () =>{
             <p className="text-slate-400">Share your knowledge with fellow students</p>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 items-center">
-              <div className="flex justify-center space-y-6">
-                <FileUpload onChange={handleOnUploadChange}/>
-
+            <div className="gap-8 items-center">
+              <div className="grid justify-center space-y-6">
+                <FileUpload onChange={handleOnUploadChange}/>                
                     {files[0] && status !== "uploading" && (
-                      <div className="flex justify-center gap-x-10">
+                      <div className="grid gap-x-10">
+                        <Card className="mb-8 bg-slate-800/50 border-slate-700">
+                  <CardContent className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">College name</label>
+                        <Select
+                          value={uploadData.college_name}
+                          onValueChange={(value) => setUploadData((prev) => ({ ...prev, college_name: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select college" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            {colleges.engineering_colleges_pune.map((college : any , index : any) =>(
+                              <SelectItem key={index} value={college.name}>{college.name}</SelectItem>
+                            )
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Year</label>
+                        <Select
+                          value={uploadData.year}
+                          onValueChange={(value) => setUploadData((prev) => ({ ...prev, year: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select year" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            {years.map((year  , index) => (
+                              <SelectItem key={index} value={year.toString()}>{year}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Subject name</label>
+                        <Select
+                          value={uploadData.subject}
+                          onValueChange={(value) => setUploadData((prev) => ({ ...prev, subject: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select exam type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            {subjects.map((subject , index) => (
+                              <SelectItem key={index} value={subject}>{subject}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Exam Type</label>
+                        <Select
+                          value={uploadData.exam_type}
+                          onValueChange={(value) => setUploadData((prev) => ({ ...prev, exam_type: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select exam type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            <SelectItem value="Insem">Insem</SelectItem>
+                            <SelectItem value="Ensem">Ensem</SelectItem>
+                            <SelectItem value="Re-Endsem">Re-Endsem</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <div className="flex justify-center">
                         <button
                           onClick={handleOnUploadSubmit}
                           className="bg-white hover:bg-gray-300 text-black px-6 py-2 rounded-lg font-medium transition-colors"
                         >
                           Submit
                         </button>
+                </div>
                         
                       </div>
                     )}
-
-                {status === "success" && (
-                  <div className="p-4 bg-green-600/20 border border-green-600/30 rounded-lg">
-                    <p className="text-green-400 font-medium">File uploaded successfully!</p>
-                  </div>
-                )}
-
-                {status === "error" && (
-                  <div className="p-4 bg-red-600/20 border border-red-600/30 rounded-lg">
-                    <p className="text-red-400 font-medium">Upload failed. Please try again.</p>
-                  </div>
-                )}
               </div>
             </div>
           </CardContent>
         </Card>
-            <div className="flex items-center gap-4 mt-20 ml-10">
+            <div className="flex items-center gap-4 mt-20 ml-10 mb-10">
               <div className="text-blue-400">
                 <BookOpen size={40} />
               </div>
@@ -227,7 +336,7 @@ export const Home = () =>{
             </div>
 
       
-                {pdf.length === 0 ? (
+                {pdf.length === 0 && (
           <Card className="ml-10 mr-10 mb-10 bg-slate-800/50 border-slate-700">
             <CardContent className="py-12 text-center">
               <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground " />
@@ -237,58 +346,55 @@ export const Home = () =>{
               </p>
             </CardContent>
           </Card>
-        ) : viewMode === "grid" ? (
-           <div className="space-y-10 mb-10"> 
-           <div className="">
-            {/* <div className="pl-12 text-2xl font-bold">Our library</div> */}
+        )} 
+
+        {viewMode === "grid" ? (
+           <div className="space-y-10 mb-10">
             <div className="space-x-2 ml-300">
-                    <Button className="bg-white" variant={viewMode === "grid" ? "default" : "outline"} size="sm" onClick={() => setViewMode("grid")}>
-                    <Grid3X3 className="h-4 w-4 text-black" />
-                    </Button>
-                    <Button size="sm" onClick={() => setViewMode("list")}>
-                    <List className="h-4 w-4" />
-                    </Button>
-            </div>
-            </div>
-          <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ml-10 mr-10 ">
+                        <Button className="bg-white" size="sm" onClick={() => setViewMode("grid")}>
+                        <Grid3X3 className="h-4 w-4 text-black" />
+                        </Button>
+                        <Button className="bg-[#030f22]" variant={viewMode === "grid" ? "default" : "outline"} size="sm" onClick={() => setViewMode("list")}>
+                        <List className="h-4 w-4 text-white" />
+                        </Button>
+                </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ml-10 mr-10 ">
             
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
-              <Card key={index}  className="group bg-[#030f22] text-white hover:shadow-md transition-shadow">
+              <Card key={index}  className="group bg-[#030f22] text-white hover:shadow-md transition-all">
                 <CardContent className="p-4">
-                  <div className="aspect-[3/4] bg-muted rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
-                    <iframe 
-                      src = {`${file.secure_Url}#page=1`}
-                      height={"500px"}>
-                    </iframe>
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-medium text-sm line-clamp-2" title={file.pdf_name}>
-                      {file.pdf_name}
-                    </h3>
-                    <div className="grid grid-cols-2">
-                      <div className="">
-                        <div className="flex mb-2 text-gray-400 items-center justify-between text-xs text-muted-foreground">
-                            <span>{(file.size / (1024 * 1024)).toFixed(2)} Mb</span>
-                        </div>
-                        <div className="flex text-gray-400 items-center justify-between text-xs text-muted-foreground">
-                          {/* <School className="h-3 w-3 mr-1"/> */}  
-                          <span>{file.college_name}</span>
+                  <div className="aspect-[3/4] bg-muted rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                        <iframe 
+                          src = {`${file.secure_Url}#page=1`}
+                          height={"500px"}>
+                        </iframe>
+                      </div>
+
+                      <div className="space-y-3">
+                        <h3 className="font-medium text-white line-clamp-2 transition-colors">
+                          {file.pdf_name}
+                        </h3>
+
+                        <div className="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1">
+                              <span>{(file.size / (1024 * 1024)).toFixed(1)} MB</span>
+                            </div>
+                            <div className="truncate">{file.college_name}</div>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              <span>{file.year}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <NotebookTabs className="h-3 w-3" />
+                              <span>{file.Examtype}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div>
-                        <div className="flex mb-2 text-gray-400 items-center text-xs text-muted-foreground">
-                          <Calendar className="h-3 w-3 mr-1" />
-                          {file.year}
-                        </div>
-                        <div className="flex text-gray-400 items-center text-xs text-muted-foreground">
-                          <NotebookTabs className="h-3 w-3 mr-1" />
-                          {file.Examtype}
-                        </div>
-                      </div>
-                    </div>
-                      
-                  </div>
                 </CardContent>
               </Card>
               </Link>
@@ -297,17 +403,14 @@ export const Home = () =>{
           </div>
         ) : (
             <div className="space-y-10 mb-10">
-                <div className="">
-            {/* <div className="pl-20 text-3xl font-semibold">Behold our library of knowledge</div> */}
-            <div className="space-x-2 ml-300">
-                    <Button className="bg-black" size="sm" onClick={() => setViewMode("grid")}>
-                    <Grid3X3 className="h-4 w-4 text-white" />
-                    </Button>
-                    <Button className="bg-white" variant={viewMode === "list" ? "default" : "outline"} size="sm" onClick={() => setViewMode("list")}>
-                    <List className="h-4 w-4 text-black" />
-                    </Button>
-            </div>
-            </div>
+                <div className="space-x-2 ml-300">
+                        <Button className="bg-[#030f22]" size="sm" onClick={() => setViewMode("grid")}>
+                        <Grid3X3 className="h-4 w-4 text-white" />
+                        </Button>
+                        <Button className="bg-white" variant={viewMode === "list" ? "default" : "outline"} size="sm" onClick={() => setViewMode("list")}>
+                        <List className="h-4 w-4 text-black" />
+                        </Button>
+                </div>
           <div className="ml-10 mr-10 space-y-2 ">
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
@@ -403,7 +506,8 @@ export const Home = () =>{
         </div>
       }
       {/* <BlueRobot/> */}
-            </div>
+            </div>)
+
             
 }
 

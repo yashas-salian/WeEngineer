@@ -43,7 +43,7 @@ export class getPdfController{
                     college_name
                 }
             })
-
+            
             if (!data || data.length == 0){
                 return c.json({
                     message : "No pdf with college name found",

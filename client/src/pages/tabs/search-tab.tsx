@@ -30,19 +30,22 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { FlipWords } from "@/components/ui/flip-words"
 import logo from "../../images/WeE_logo.png"
 import axios from "axios"
 import { toast } from "react-fox-toast"
+import colleges from "../../data/college-data.json"
+import subjects from "../../data/subjects-data.json"
+import { Link } from "react-router-dom"
 
 
 interface SearchSchema {
   college_name: string
   year: string
-  Examtype: string
+  Examtype: string,
+  subject : string 
 }
 
 interface Data {
@@ -58,6 +61,8 @@ interface Data {
 }
 
 export const Search = () => {
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage] = useState(12)
@@ -66,6 +71,7 @@ export const Search = () => {
     college_name: "",
     year: "",
     Examtype: "",
+    subject : ""
   })
 
   const blockPerPage = 4
@@ -154,6 +160,7 @@ export const Search = () => {
       college_name: "",
       year: "",
       Examtype: "",
+      subject : ""
     })
     setPdf([])
   }
@@ -241,53 +248,76 @@ export const Search = () => {
         {filter && (
           <Card className="mb-8 bg-slate-800/50 border-slate-700">
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">College Name</label>
-                  <Input
-                    placeholder="Enter college name"
-                    value={search.college_name}
-                    onChange={(e) => setSearch((prev) => ({ ...prev, college_name: e.target.value }))}
-                    className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                  />
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">College name</label>
+                        <Select
+                          value={search.college_name}
+                          onValueChange={(value) => setSearch((prev) => ({ ...prev, college_name: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select college" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            {colleges.engineering_colleges_pune.map((college : any , index : any) =>(
+                              <SelectItem key={index} value={college.name}>{college.name}</SelectItem>
+                            )
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Year</label>
-                  <Select
-                    value={search.year}
-                    onValueChange={(value) => setSearch((prev) => ({ ...prev, year: value }))}
-                  >
-                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                      <SelectValue placeholder="Select year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2024">2024</SelectItem>
-                      <SelectItem value="2023">2023</SelectItem>
-                      <SelectItem value="2022">2022</SelectItem>
-                      <SelectItem value="2021">2021</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Exam Type</label>
-                  <Select
-                    value={search.Examtype}
-                    onValueChange={(value) => setSearch((prev) => ({ ...prev, Examtype: value }))}
-                  >
-                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                      <SelectValue placeholder="Select exam type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Midterm">Midterm</SelectItem>
-                      <SelectItem value="Final">Final</SelectItem>
-                      <SelectItem value="Quiz">Quiz</SelectItem>
-                      <SelectItem value="Assignment">Assignment</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Year</label>
+                        <Select
+                          value={search.year}
+                          onValueChange={(value) => setSearch((prev) => ({ ...prev, year: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select year" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            {years.map((year  , index) => (
+                              <SelectItem key={index} value={year.toString()}>{year}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Subject name</label>
+                        <Select
+                          value={search.subject}
+                          onValueChange={(value) => setSearch((prev) => ({ ...prev, subject: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select exam type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            {subjects.map((subject , index) => (
+                              <SelectItem key={index} value={subject}>{subject}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Exam Type</label>
+                        <Select
+                          value={search.Examtype}
+                          onValueChange={(value) => setSearch((prev) => ({ ...prev, Examtype: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select exam type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                            <SelectItem value="Insem">Insem</SelectItem>
+                            <SelectItem value="Ensem">Ensem</SelectItem>
+                            <SelectItem value="Re-Endsem">Re-Endsem</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
 
               <div className="flex gap-3">
                 <Button
@@ -367,11 +397,11 @@ export const Search = () => {
 
             {/* Grid View */}
             {viewMode === "grid" ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+              <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
                 {paginatedPdf.map((file, index) => (
+                  <Link to={file.secure_Url}>
                   <Card
                     key={index}
-                    data-aos="fade-up"
                     className="group bg-[#030f22] transition-all duration-300"
                   >
                     <CardContent className="p-4">
@@ -408,6 +438,7 @@ export const Search = () => {
                       </div>
                     </CardContent>
                   </Card>
+                  </Link>
                 ))}
               </div>
             ) : (

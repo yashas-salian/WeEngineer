@@ -78,7 +78,7 @@ export const Quiz = () => {
     const percentage = Math.round((score / quizData.questions.length) * 100)
 
     return (
-      <div className=" w-full mx-auto p-6 space-y-6">
+      <div className="w-full mx-auto p-6 space-y-6 overflow-hidden">
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Quiz Results</CardTitle>
@@ -102,7 +102,7 @@ export const Quiz = () => {
                 const isCorrect = userAnswer === question.correct_answer
 
                 return (
-                  <Card key={index} className="border-l-4 border-l-muted">
+                  <Card key={index} className="w-full border-l-4 border-l-muted overflow-hidden">
                     <CardHeader className="pb-3">
                       <div className="flex items-start gap-3">
                         {isCorrect ? (
@@ -154,9 +154,9 @@ export const Quiz = () => {
   const question = quizData.questions[currentQuestion]
 
   return ( 
-    <div className="bg-[#04152d] mx-auto p-6 space-y-6">
+    <div className="bg-[#04152d] w-screen mx-auto p-4 h-screen pt-10 overflow-x-hidden">
       {/* Header */}
-      <Card className="bg-[#030f22]">
+      <Card className="bg-[#030f22] overflow-hidden">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -175,9 +175,9 @@ export const Quiz = () => {
       </Card>
 
       {/* Question */}
-      <Card className="">
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="bg-slate-800/50 rounded-xl p-3 text-lg leading-relaxed ">{question.question}</CardTitle>
+          <CardTitle className="bg-white text-[#04152d] rounded-xl p-3 text-lg leading-relaxed ">Q.{ currentQuestion + 1 } {question.question}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3">
@@ -202,28 +202,14 @@ export const Quiz = () => {
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
-            <Button variant="outline" onClick={handlePrevious} disabled={currentQuestion === 0}>
+            <Button className="bg-white text-[#030f22]" onClick={handlePrevious} disabled={currentQuestion === 0}>
               Previous
             </Button>
 
-            {/* <div className="flex gap-2">
-              {quizData.questions.map((_: any, index: any) => (
-                <Button
-                  key={index}
-                  variant={index === currentQuestion ? "default" : selectedAnswers[index] ? "secondary" : "outline"}
-                  size="sm"
-                  className="w-10 h-10"
-                  onClick={() => setCurrentQuestion(index)}
-                >
-                  {index + 1}
-                </Button>
-              ))}
-            </div> */}
-
             {currentQuestion === quizData.questions.length - 1 ? (
-              <Button onClick={handleSubmitQuiz}>Submit Quiz</Button>
+              <Button className="bg-green-900" onClick={handleSubmitQuiz}>Submit Quiz</Button>
             ) : (
-              <Button onClick={handleNext}>Next</Button>
+              <Button className="bg-white text-[#030f22]" onClick={handleNext}>Next</Button>
             )}
           </div>
         </CardContent>
