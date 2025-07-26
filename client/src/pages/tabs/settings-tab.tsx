@@ -8,10 +8,10 @@ import { NavBar } from "@/components/navbar"
 import type { tabStatus } from "@/components/ui/app-sidebar"
 
 type settingstabStatus = "Account" | "Contact us" | "About us" | "Docs"
-export const SettingsTab = ({setTab}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>> }) => {
+export const SettingsTab = ({setTab , sidebarOpen, setSidebarOpen}:{ setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const [settingsTab , setSettingsTab] = useState<settingstabStatus>("Account")
-    const [sidebarOpen, setSidebarOpen] = useState(true) 
-    return <div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    // const [sidebarOpen, setSidebarOpen] = useState(true) 
+    return <div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-0.5rem)]" : "w-[calc(100vw-16.5rem)]")}>
                     <ToastContainer/>
                     <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
                 <div data-aos="zoom-in">

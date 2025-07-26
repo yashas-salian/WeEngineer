@@ -12,6 +12,7 @@ import { AddEventTab } from "./tabs/add-event-tab"
 
 
 export const Dashboard = () =>{
+  const [sidebarOpen, setSidebarOpen] = useState(true)  
   const [tab, setTab] = useState<tabStatus>("Home")
   const [loading, setLoading] = useState(false);
 return loading ? <div className="flex justify-center bg-[#04152d]"><EngineeringMachine/></div> :
@@ -20,23 +21,23 @@ return loading ? <div className="flex justify-center bg-[#04152d]"><EngineeringM
                       <AppSidebar tab={tab} setTab={setTab}/>
                       <SidebarInset className="flex-1 min-w-0 overflow-hidden">
                           {tab == "Home" &&
-                          <Home setLoading={setLoading} setTab={setTab}/>
+                          <Home setLoading={setLoading} setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Search" &&
-                            <Search setTab={setTab}/>
+                            <Search setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Quiz" &&
-                            <QuizTab setTab={setTab}/>
+                            <QuizTab setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Settings" &&
-                            <SettingsTab setTab={setTab}/>
+                            <SettingsTab setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Calender" &&
-                            <AddEventTab setTab={setTab}/>
+                            <AddEventTab setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                         <Footer/>
                       </SidebarInset>

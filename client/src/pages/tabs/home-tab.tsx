@@ -34,7 +34,7 @@ import { NavBar } from "@/components/navbar"
 import type { tabStatus } from "@/components/ui/app-sidebar"
 
 
-export const Home = ({ setLoading , setTab }: { setLoading: React.Dispatch<React.SetStateAction<boolean>>, setTab: React.Dispatch<React.SetStateAction<tabStatus>> }) =>{
+export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { setLoading: React.Dispatch<React.SetStateAction<boolean>>, setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) =>{
     type uploadStatus = "idle" | "uploading" | "error" | "success"
     interface uploadSchma {
       college_name : string,
@@ -53,7 +53,7 @@ export const Home = ({ setLoading , setTab }: { setLoading: React.Dispatch<React
     const totalPages = Math.ceil(pdf.length / postsPerPage);
     const paginatedPdf = pdf.slice(firstPageIndex,lastPostIndex)
     const blockPerPage = 4
-    const [sidebarOpen, setSidebarOpen] = useState(true)  
+    // const [sidebarOpen, setSidebarOpen] = useState(true)  
     const [uploadData , setUploadData] = useState<uploadSchma>({
       college_name : "",
       year : "",
@@ -149,7 +149,7 @@ export const Home = ({ setLoading , setTab }: { setLoading: React.Dispatch<React
       });
     }, []);
 
-    return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-0.5rem)]" : "w-[calc(100vw-16.5rem)]")}>
                 <ToastContainer/>
                 <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
                 <StatusCard/>

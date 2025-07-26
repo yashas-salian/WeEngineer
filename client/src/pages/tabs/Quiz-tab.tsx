@@ -13,12 +13,12 @@ import { useNavigate } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
 import type { tabStatus } from "@/components/ui/app-sidebar"
 
-export const QuizTab = ({setTab}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>> }) => {
+export const QuizTab = ({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
   const [difficulty, setDifficulty] = useState("")
   const [timeLimit, setTimeLimit] = useState([30])
   const [topic, setTopic] = useState("")
   const [questionCount, setQuestionCount] = useState([10])
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  // const [sidebarOpen, setSidebarOpen] = useState(true)
   
   const navigate = useNavigate()
 
@@ -42,7 +42,7 @@ export const QuizTab = ({setTab}:{setTab: React.Dispatch<React.SetStateAction<ta
   const isFormValid = difficulty && topic
 
   return (
-    <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150", sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150", sidebarOpen ? "w-[calc(100vw-0.5rem)]" : "w-[calc(100vw-16.5rem)]")}>
         <ToastContainer/>
         <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
 

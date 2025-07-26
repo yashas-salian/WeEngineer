@@ -24,7 +24,7 @@ interface Event {
   createdAt: Date
 }
 
-export const AddEventTab=({setTab}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>> }) => {
+export const AddEventTab=({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [events, setEvents] = useState<Event[]>([])
   const [isAddingEvent, setIsAddingEvent] = useState(false)
   const [editingEvent, setEditingEvent] = useState<string | null>(null)
@@ -34,7 +34,7 @@ export const AddEventTab=({setTab}:{setTab: React.Dispatch<React.SetStateAction<
     date: "",
     type: "exam" as Event["type"],
   })
-    const [sidebarOpen, setSidebarOpen] = useState(true)
+    // const [sidebarOpen, setSidebarOpen] = useState(true)
 
 
   const handleAddEvent = () => {
@@ -113,7 +113,7 @@ export const AddEventTab=({setTab}:{setTab: React.Dispatch<React.SetStateAction<
           once: true   
         });
       }, []);
-  return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+  return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-0.5rem)]" : "w-[calc(100vw-16.5rem)]")}>
                 <ToastContainer/>
                 <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
 
