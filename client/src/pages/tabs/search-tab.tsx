@@ -405,7 +405,7 @@ export const Search = () => {
                     className="group bg-[#030f22] transition-all duration-300"
                   >
                     <CardContent className="p-4">
-                      <div className="aspect-[3/4] bg-slate-700 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                      <div className="aspect-[3/4] bg-muted rounded-lg mb-4 flex items-center justify-center overflow-hidden">
                         <iframe 
                           src = {`${file.secure_Url}#page=1`}
                           height={"500px"}>

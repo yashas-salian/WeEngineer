@@ -29,7 +29,7 @@ const items = [
     icon: TestTube,
   },
   {
-    title: "Calendar",
+    title: "Calender",
     url: "#",
     icon: Calendar,
   },

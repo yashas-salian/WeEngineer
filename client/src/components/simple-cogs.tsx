@@ -2,7 +2,7 @@
 
 export const EngineeringMachine = () => {
   return (
-    <div className="h-screen w-screen bg-transparent flex items-center justify-center">
+    <div className="bg-[#04152d] fixed inset-0 flex items-center justify-center z-50">
       <div className="relative">
         {/* Large Main Gear */}
         <div className="w-32 h-32">

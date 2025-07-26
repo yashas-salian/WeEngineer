@@ -32,7 +32,6 @@ import { toast, ToastContainer } from "react-fox-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
-import { EngineeringMachine } from "@/components/simple-cogs"
 
 
 export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetStateAction<boolean>> }) =>{
@@ -54,7 +53,7 @@ export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetState
     const totalPages = Math.ceil(pdf.length / postsPerPage);
     const paginatedPdf = pdf.slice(firstPageIndex,lastPostIndex)
     const blockPerPage = 4
-    const [sidebarOpen, setSidebarOpen] = useState(true)
+    const [sidebarOpen, setSidebarOpen] = useState(true)  
     const [uploadData , setUploadData] = useState<uploadSchma>({
       college_name : "",
       year : "",

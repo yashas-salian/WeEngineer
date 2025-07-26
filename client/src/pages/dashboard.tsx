@@ -6,6 +6,9 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar, type tabStatus } from "@/components/ui/app-sidebar"
 import { QuizTab } from "./tabs/quiz-tab"
 import { EngineeringMachine } from "@/components/simple-cogs"
+import { SettingsTab } from "./tabs/settings-tab"
+import { AddEventTab } from "./tabs/add-event-tab"
+
 
 
 export const Dashboard = () =>{
@@ -27,6 +30,14 @@ return loading ? <div className="flex justify-center bg-[#04152d]"><EngineeringM
       {
         tab == "Quiz" &&
         <QuizTab/>
+      }
+      {
+        tab == "Settings" &&
+        <SettingsTab/>
+      }
+      {
+        tab == "Calender" &&
+        <AddEventTab/>
       }
     <Footer/>
     </SidebarInset>

@@ -78,7 +78,7 @@ export const Quiz = () => {
     const percentage = Math.round((score / quizData.questions.length) * 100)
 
     return (
-      <div className="w-full mx-auto p-6 space-y-6 overflow-hidden">
+      <div className="bg-[#04152d] w-screen mx-auto p-6 space-y-6 overflow-hidden">
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Quiz Results</CardTitle>
@@ -102,14 +102,9 @@ export const Quiz = () => {
                 const isCorrect = userAnswer === question.correct_answer
 
                 return (
-                  <Card key={index} className="w-full border-l-4 border-l-muted overflow-hidden">
+                  <Card key={index} className={cn("w-full overflow-hidden", isCorrect ? "bg-green-900" : "bg-red-900")}>
                     <CardHeader className="pb-3">
                       <div className="flex items-start gap-3">
-                        {isCorrect ? (
-                          <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        ) : (
-                          <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                        )}
                         <div className="flex-1">
                           <CardTitle className="text-base">Question {index + 1}</CardTitle>
                           <p className="text-sm text-muted-foreground mt-1">{question.question}</p>
@@ -120,12 +115,12 @@ export const Quiz = () => {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">Your answer:</span>
-                          <Badge>{userAnswer || "Not answered"}</Badge>
+                          {userAnswer || "Not answered"}
                         </div>
                         {!isCorrect && (
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">Correct answer:</span>
-                            <Badge>{question.correct_answer}</Badge>
+                            {question.correct_answer}
                           </div>
                         )}
                       </div>
@@ -139,7 +134,7 @@ export const Quiz = () => {
             </div>
 
             <div className="flex justify-center">
-              <Button onClick={restartQuiz} className="gap-2">
+              <Button onClick={restartQuiz} className="bg-white text-[#04152d] gap-2">
                 <RotateCcw className="w-4 h-4" />
                 Retake Quiz
               </Button>
