@@ -1,16 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, Edit, Trash2, Check, X, Plus, User } from "lucide-react"
+import { Calendar, Clock, Edit, Trash2, Check, X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ToastContainer } from "react-fox-toast"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import logo from "../../images/WeE_logo.png"
+import { NavBar } from "@/components/navbar"
+import Aos from "aos"
 
 
 interface Event {
@@ -106,42 +106,31 @@ export const AddEventTab=() => {
   }
 
   const sortedEvents = [...events].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-
-  return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+  useEffect(() => {
+        Aos.init({
+          duration: 1000,  
+          once: true   
+        });
+      }, []);
+  return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
                 <ToastContainer/>
-                <div className="bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
-                    <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
-                        <SidebarTrigger className="text-4xl text-black" onClick={()=>{
-                          setSidebarOpen(prev => !prev)
-                        }}/>
-                    </div>
-                    <div className="col-span-1"></div>
-                    <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
-                      <div className="flex gap-x-2">
-                        <img src={logo} alt="Logo" className="w-12 h-12"></img>
-                        <p className="text-white">WeEnginner</p>
-                      </div>
-                    </div>
-                    <div className={cn("col-span-1 pl-10" , sidebarOpen ? "invisible" : "")}>
-                        {/* <div className="flex gap-x-2 justify-center pt-1"> */}
-                            <div className="bg-white w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5 text-black"/></div>
-                            {/* <div className="">Profile</div> */}
-                        {/* </div> */}
-                    </div>
-                </div>
+                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+
     <div className="items-center p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Student Events</h1>
-          <p className="text-gray-400">Manage your exams, deadlines, and assignments</p>
-        </div>
+        <div data-aos="zoom-in" >
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Student Events</h1>
+            <p className="text-gray-400">Manage your exams, deadlines, and assignments</p>
+          </div>
 
-        {/* Add Event Button */}
-        <div className="mb-6">
-          <Button onClick={() => setIsAddingEvent(prev => !prev)} className="flex items-center gap-2 bg-white text-[#04152d]">
-            <Plus className="h-4 w-4" />
-            Add New Event
-          </Button>
+          {/* Add Event Button */}
+          <div className="mb-6">
+            <Button onClick={() => setIsAddingEvent(prev => !prev)} className="flex items-center gap-2 bg-white text-[#04152d]">
+              <Plus className="h-4 w-4" />
+              Add New Event
+            </Button>
+          </div>
         </div>
 
         {/* Add Event Form */}
@@ -211,16 +200,16 @@ export const AddEventTab=() => {
         {/* Events List */}
         <div className="space-y-4">
           {sortedEvents.length === 0 ? (
-            <Card>
+            <Card  data-aos="fade-up" className="bg-slate-800/50 border-slate-700">
               <CardContent className="text-center py-12">
                 <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No events yet</h3>
+                <h3 className="text-lg font-medium text-white mb-2">No events yet</h3>
                 <p className="text-gray-500">Add your first event to get started!</p>
               </CardContent>
             </Card>
           ) : (
             sortedEvents.map((event) => (
-              <Card key={event.id} className={`${event.status === "completed" ? "opacity-75" : ""}`}>
+              <Card key={event.id} data-aos="fade-up" className={`${event.status === "completed" ? "opacity-75" : ""}`}>
                 <CardContent className="p-6">
                   {editingEvent === event.id ? (
                     <EditEventForm

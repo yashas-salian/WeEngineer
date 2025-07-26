@@ -5,13 +5,12 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { Clock, BookOpen, Target, Hash, Play, User } from "lucide-react"
+import { Clock, BookOpen, Target, Hash, Play } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import logo from "../../images/WeE_logo.png"
 import axios from "axios"
 import { toast, ToastContainer } from "react-fox-toast"
 import { useNavigate } from "react-router-dom"
+import { NavBar } from "@/components/navbar"
 
 export const QuizTab = () => {
   const [difficulty, setDifficulty] = useState("")
@@ -44,26 +43,8 @@ export const QuizTab = () => {
   return (
     <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out ", sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
         <ToastContainer/>
-        <div className="bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
-                    <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
-                        <SidebarTrigger className="text-4xl text-black" onClick={()=>{
-                          setSidebarOpen(prev => !prev)
-                        }}/>
-                    </div>
-                    <div className="col-span-1"></div>
-                    <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
-                      <div className="flex gap-x-2">
-                        <img src={logo} alt="Logo" className="w-12 h-12"></img>
-                        <p className="text-white">WeEnginner</p>
-                      </div>
-                    </div>
-                    <div className={cn("col-span-1 pl-10" , sidebarOpen ? "invisible" : "")}>
-                        {/* <div className="flex gap-x-2 justify-center pt-1"> */}
-                            <div className="bg-white w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5 text-black"/></div>
-                            {/* <div className="">Profile</div> */}
-                        {/* </div> */}
-                    </div>
-                </div>
+        <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+
       <div className="max-w-2xl mx-auto">
         <div data-aos="zoom-in" className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Quiz Setup</h1>

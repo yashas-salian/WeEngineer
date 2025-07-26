@@ -15,34 +15,33 @@ export const Dashboard = () =>{
   const [tab, setTab] = useState<tabStatus>("Home")
   const [loading, setLoading] = useState(false);
 return loading ? <div className="flex justify-center bg-[#04152d]"><EngineeringMachine/></div> :
-<div className="flex relative bg-[#04152d] min-h-screen overflow-hidden transition-all duration-300">
-                <SidebarProvider className="relative z-10 w-full">
+                  <div className="flex relative bg-[#04152d] min-h-screen overflow-hidden transition-all duration-300">
+                    <SidebarProvider className="relative z-10 w-full">
                       <AppSidebar tab={tab} setTab={setTab}/>
-                    <SidebarInset className="flex-1 min-w-0 overflow-hidden">
-                    {/* <AnimatedBackground/> */}
-      {tab == "Home" &&
-      <Home setLoading={setLoading}/>
-      }
-      {
-        tab == "Search" &&
-        <Search/>
-      }
-      {
-        tab == "Quiz" &&
-        <QuizTab/>
-      }
-      {
-        tab == "Settings" &&
-        <SettingsTab/>
-      }
-      {
-        tab == "Calender" &&
-        <AddEventTab/>
-      }
-    <Footer/>
-    </SidebarInset>
-    </SidebarProvider>
-    </div>
+                      <SidebarInset className="flex-1 min-w-0 overflow-hidden">
+                          {tab == "Home" &&
+                          <Home setLoading={setLoading}/>
+                          }
+                          {
+                            tab == "Search" &&
+                            <Search/>
+                          }
+                          {
+                            tab == "Quiz" &&
+                            <QuizTab/>
+                          }
+                          {
+                            tab == "Settings" &&
+                            <SettingsTab/>
+                          }
+                          {
+                            tab == "Calender" &&
+                            <AddEventTab/>
+                          }
+                        <Footer/>
+                      </SidebarInset>
+                    </SidebarProvider>
+                      </div>
 }
 
 

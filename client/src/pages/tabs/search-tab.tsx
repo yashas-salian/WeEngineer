@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import {
   Badge,
   Calendar,
@@ -15,7 +14,6 @@ import {
   NotebookTabs,
   SearchIcon,
   Trash2,
-  User,
   X,
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -33,12 +31,12 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { FlipWords } from "@/components/ui/flip-words"
-import logo from "../../images/WeE_logo.png"
 import axios from "axios"
 import { toast } from "react-fox-toast"
 import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
 import { Link } from "react-router-dom"
+import { NavBar } from "@/components/navbar"
 
 
 interface SearchSchema {
@@ -200,27 +198,8 @@ export const Search = () => {
     }
 
   return (
-    <div className={cn("bg-[#04152d] z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
-                <div  className="bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
-                    <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
-                        <SidebarTrigger className="text-4xl text-black" onClick={()=>{
-                          setSidebarOpen(prev => !prev)
-                        }}/>
-                    </div>
-                    <div className="col-span-1"></div>
-                    <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
-                      <div className="flex gap-x-2">
-                        <img src={logo} alt="Logo" className="w-12 h-12"></img>
-                        <p className="text-white">WeEnginner</p>
-                      </div>
-                    </div>
-                    <div className={cn("col-span-1 pl-10" , sidebarOpen ? "invisible" : "")}>
-                        {/* <div className="flex gap-x-2 justify-center pt-1"> */}
-                            <div className="bg-white w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5 text-black"/></div>
-                            {/* <div className="">Profile</div> */}
-                        {/* </div> */}
-                    </div>
-                </div>
+    <div className={cn("bg-[#04152d] z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
 
       <div className="flex-1 p-6">
         {/* Hero Section */}

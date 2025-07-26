@@ -1,8 +1,7 @@
 import { FileUpload } from "@/components/ui/file-upload"
-import {  useEffect, useRef, useState } from "react"
+import {  useEffect, useState } from "react"
 import axios from "axios"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Badge, BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, SearchIcon, Sparkles, Trash2, Upload, User } from "lucide-react"
+import { Badge, BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, Sparkles, Trash2, Upload, } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   DropdownMenu,
@@ -22,7 +21,6 @@ import {
 import { getPdfs } from "../../hooks/use-pdf"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import logo from "../../images/WeE_logo.png"
 import { Link } from "react-router-dom"
 import Aos from "aos"
 import 'aos/dist/aos.css';
@@ -32,6 +30,7 @@ import { toast, ToastContainer } from "react-fox-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
+import { NavBar } from "@/components/navbar"
 
 
 export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetStateAction<boolean>> }) =>{
@@ -99,7 +98,6 @@ export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetState
             setFiles(files)
         // console.log(files)
     }
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleOnUploadSubmit = async () =>{
         if (!files) return
@@ -150,32 +148,11 @@ export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetState
       });
     }, []);
 
-    return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
                 <ToastContainer/>
-                <div className="bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4 gap-x-120">
-                    <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
-                        <SidebarTrigger className="text-4xl text-black" onClick={()=>{
-                          setSidebarOpen(prev => !prev)
-                        }}/>
-                    </div>
-                    <div className="col-span-1"></div>
-                    <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
-                      <div className="flex gap-x-2">
-                        <img src={logo} alt="Logo" className="w-12 h-12"></img>
-                        <p className="text-white">WeEnginner</p>
-                      </div>
-                    </div>
-                    <div className={cn("col-span-1 pl-10" , sidebarOpen ? "invisible" : "")}>
-                        {/* <div className="flex gap-x-2 justify-center pt-1"> */}
-                            <div className="bg-white w-10 h-10 rounded-full border border-gray-200"><User className="mt-1.5 ml-1.5 text-black"/></div>
-                            {/* <div className="">Profile</div> */}
-                        {/* </div> */}
-                    </div>
-                </div>
-            <StatusCard/>
+                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+                <StatusCard/>
 
-            {/* <EngineeringMachine/> */}
-            
           <Card data-aos="fade-up" className="bg-[#030f22] mr-4 ml-4 overflow-hidden">
           <CardContent className="p-0">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
