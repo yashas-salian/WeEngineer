@@ -13,5 +13,3 @@ export const NavTabOptions = ({tab , setTab} : {tab : tabStatus,setTab : React.D
         ))}
     </div>
 }
-
-// bg-white text-[#04152d] 

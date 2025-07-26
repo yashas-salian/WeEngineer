@@ -31,9 +31,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
 import { NavBar } from "@/components/navbar"
+import type { tabStatus } from "@/components/ui/app-sidebar"
 
 
-export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetStateAction<boolean>> }) =>{
+export const Home = ({ setLoading , setTab }: { setLoading: React.Dispatch<React.SetStateAction<boolean>>, setTab: React.Dispatch<React.SetStateAction<tabStatus>> }) =>{
     type uploadStatus = "idle" | "uploading" | "error" | "success"
     interface uploadSchma {
       college_name : string,
@@ -150,7 +151,7 @@ export const Home = ({ setLoading }: { setLoading: React.Dispatch<React.SetState
 
     return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
                 <ToastContainer/>
-                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
                 <StatusCard/>
 
           <Card data-aos="fade-up" className="bg-[#030f22] mr-4 ml-4 overflow-hidden">

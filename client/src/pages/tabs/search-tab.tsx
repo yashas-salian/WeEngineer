@@ -37,6 +37,7 @@ import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
 import { Link } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
+import type { tabStatus } from "@/components/ui/app-sidebar"
 
 
 interface SearchSchema {
@@ -58,7 +59,7 @@ interface Data {
   subject_name: string
 }
 
-export const Search = () => {
+export const Search = ({setTab}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>> }) => {
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -199,7 +200,7 @@ export const Search = () => {
 
   return (
     <div className={cn("bg-[#04152d] z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
-      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
 
       <div className="flex-1 p-6">
         {/* Hero Section */}

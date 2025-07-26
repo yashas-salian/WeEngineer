@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { ToastContainer } from "react-fox-toast"
 import { NavBar } from "@/components/navbar"
 import Aos from "aos"
+import type { tabStatus } from "@/components/ui/app-sidebar"
 
 
 interface Event {
@@ -23,7 +24,7 @@ interface Event {
   createdAt: Date
 }
 
-export const AddEventTab=() => {
+export const AddEventTab=({setTab}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>> }) => {
   const [events, setEvents] = useState<Event[]>([])
   const [isAddingEvent, setIsAddingEvent] = useState(false)
   const [editingEvent, setEditingEvent] = useState<string | null>(null)
@@ -114,7 +115,7 @@ export const AddEventTab=() => {
       }, []);
   return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
                 <ToastContainer/>
-                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
 
     <div className="items-center p-4">
       <div className="max-w-4xl mx-auto">
