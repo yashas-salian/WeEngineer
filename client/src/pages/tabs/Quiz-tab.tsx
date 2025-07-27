@@ -42,7 +42,7 @@ export const QuizTab = ({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dis
   const isFormValid = difficulty && topic
 
   return (
-    <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150", sidebarOpen ? "w-[calc(100vw-0.5rem)]" : "w-[calc(100vw-16.5rem)]")}>
+    <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150", sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
         <ToastContainer/>
         <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
 

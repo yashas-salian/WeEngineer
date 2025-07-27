@@ -17,7 +17,12 @@ export const getPdfs = () =>{
     const getAllPdfs = useCallback (async () => {
         try {
             const res = await axios.get("http://127.0.0.1:8787/get-all-pdf")
-            setpdf(res.data.response)
+            if (res.data.redisResponse){
+                setpdf(res.data.redisResponse)
+            }
+            if (res.data.response){
+                setpdf(res.data.response)
+            }
             } catch (error) {
                 setError(error as string)
         }},[])

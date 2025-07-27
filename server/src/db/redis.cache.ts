@@ -23,12 +23,25 @@ export class redisSingleton{
     }
 
     static async Set(c : Context , key : string , value : Object | number): Promise<void> {
-        const redis = this.getInstance(c)
-        await redis.set(key, JSON.stringify(value) , {ex : 3600});
+        try {
+            const redis = this.getInstance(c)
+            await redis.set(key, JSON.stringify(value) , {ex : 3600});          
+        } catch (error) {
+             console.error("Redis Set Error:", error)
+            throw error
+        }
+        
     }
 
     static async Get(c : Context , key : string ): Promise<any> {
-        const redis = this.getInstance(c)
-        return await redis.get(key);
+        try {
+            const redis = this.getInstance(c)
+            const result = await redis.get(key);  
+            return result           
+        } catch (error) {
+            console.error("Redis get Error:", error)
+            throw error           
+        }
+
     }
 }

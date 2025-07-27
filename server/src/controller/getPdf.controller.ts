@@ -1,29 +1,42 @@
 import { Context } from "hono";
 import { getPrismaClient } from "../db/prisma";
-import { isValid } from "zod";
-import { getAllPdfBasedOnCollegeSchema, getAllPdfBasedOnExamTypeAndCollegeAndYearSchema, getAllPdfBasedOnExamTypeAndCollegeSchema, getAllPdfBasedOnYearAndCollegeSchema } from "../model/pdf.model";
+import { redisSingleton } from "../db/redis.cache";
 
 export class getPdfController{
     static async getAllPdf(c : Context){
         try{
+            console.log("Before Redis")
+            const cacheKey = 'Allpdfs'
+            const redisResponse = await redisSingleton.Get(c, cacheKey)
+            console.log("Redis get")
+            if (redisResponse){
+                return c.json({
+                    message : "All pdf fetched successfully",
+                    redisResponse,
+                    method : "Redis hit",
+                    success : true
+                },200)
+            }
+            console.log("After Redis")
             const prisma  = getPrismaClient(c.env.DATABASE_URL)
             const response = await prisma.pdf.findMany()
 
             if (!response){
                 throw new Error("Database hit failed")
             }
-
+            redisSingleton.Set(c, cacheKey, response)
             return c.json({
                 message : "All pdf fetched successfully",
                 response,
+                method : "DB call",
                 success : true
             },200)
         }
         catch(e){
             return c.json({
-                error : e instanceof Error,
-                message : "Some error occured",
-                success : false
+                error: true,
+                message: e instanceof Error ? e.message : "Unknown error",
+                success: false
             },500)
         }
 

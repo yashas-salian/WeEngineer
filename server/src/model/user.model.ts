@@ -6,7 +6,11 @@ export const loginSchema = z.object({
 }) 
 
 export const registerSchema = z.object({
-    username : z.string().optional(),
+    username : z.string().nonempty('Provide username'),
     email : z.string().email('Invalid email address'),
-    password : z.string().min(6, 'Password must be atleast of 6 characters')
+    password : z.string().min(6, 'Password must be atleast of 6 characters'),
+    DOB : z.string().nonempty('Provide DOB'),
+    College : z.string().nonempty('Provide college name'),
+    Degree : z.string().nonempty('Provide degree name'),
+    Field : z.string().nonempty('Provide field name'),
 })

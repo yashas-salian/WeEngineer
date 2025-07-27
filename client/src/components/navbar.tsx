@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import type { tabStatus } from "./ui/app-sidebar"
 
 export const NavBar = ({sidebarOpen , setSidebarOpen, setTab}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>, setTab: React.Dispatch<React.SetStateAction<tabStatus>>}) => {  
-    return <div className={cn("bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4" , sidebarOpen ? "w-[calc(100vw-2rem)]" : "w-[calc(100vw-18rem)]")}>
+    return <div className={cn("bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4" , sidebarOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]")}>
                 <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
                     <SidebarTrigger className="text-4xl text-black" onClick={()=>{
                         setSidebarOpen(prev => !prev)

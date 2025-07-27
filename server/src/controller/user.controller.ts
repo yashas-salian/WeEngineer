@@ -33,6 +33,10 @@ export class userController {
                     username : body.username,
                     password : body.password,
                     email : body.email,
+                    DOB : body.DOB,
+                    College : body.college,
+                    Degree : body.degree,
+                    Field : body.field
                 }
             })
             if (!user){
