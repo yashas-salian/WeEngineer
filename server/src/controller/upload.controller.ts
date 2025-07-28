@@ -32,7 +32,8 @@ export class uploadController{
             const prisma = getPrismaClient(c.env.DATABASE_URL)
             const responseFromDB = await prisma.pdf.create({
                 data : {
-                    ID : data.public_id,
+                    pdfID : data.public_id,
+                    userID : 15,
                     college_name,
                     pdf_name : data.original_filename,
                     year,
@@ -53,8 +54,8 @@ export class uploadController{
         catch(e){
             console.error(e)
             return c.json({
-                error : e instanceof Error,
-                message : 'Some error occured',
+                error : true,
+                message : e instanceof Error ? e.message : "Unknown error",
                 success : false
         },500)
     }

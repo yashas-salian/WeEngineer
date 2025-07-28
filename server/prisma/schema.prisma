@@ -18,16 +18,16 @@ model User{
   ID Int @id @default(autoincrement())
   username String @unique
   email String @unique
-  password String
-  DOB String
-  College String
-  Degree String
-  Field String
+  password String?
+  DOB String?
+  College String?
+  Degree String?
+  Field String?
   pdfs Pdf[]
 }
 
 model Pdf{
-  pdfID Int @id @default(autoincrement())
+  pdfID String @id
   userID Int
   college_name String
   subject_name String

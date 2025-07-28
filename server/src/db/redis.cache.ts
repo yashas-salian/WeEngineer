@@ -25,7 +25,7 @@ export class redisSingleton{
     static async Set(c : Context , key : string , value : Object | number): Promise<void> {
         try {
             const redis = this.getInstance(c)
-            await redis.set(key, JSON.stringify(value) , {ex : 3600});          
+            await redis.set(key, JSON.stringify(value) , {ex : 60});          
         } catch (error) {
              console.error("Redis Set Error:", error)
             throw error

@@ -4,39 +4,38 @@ import { getPrismaClient } from "../db/prisma";
 import { redisSingleton } from "../db/redis.cache";
 
 export class userController {
-    static async register( c:Context ){
+    static async register( c:Context , data : object ){
         try{
             const body = await c.req.json()
-            const isvalid  = registerSchema.safeParse(body)
-            if (!isvalid.success){
-                return c.json({
-                    message : 'Invalid inputs'
-                })
-            }
+            // const isvalid  = registerSchema.safeParse(body)
+            // if (!isvalid.success){
+            //     return c.json({
+            //         message : 'Invalid inputs'
+            //     })
+            // }
+
+            const eventType = body.eventType
+            const userData = body.data
             const prisma  =  getPrismaClient(c.env.DATABASE_URL)
             console.log("prisma client created")
 
-            const existingUser = await prisma.user.findFirst({
-                where : {
-                    email: body.email
-                }
-            })
+            // const existingUser = await prisma.user.findFirst({
+            //     where : {
+            //         email: body.email
+            //     }
+            // })
 
-            if (existingUser){
-                return c.json({
-                message : 'User with email already exists'
-            },400)
-            }
-
+            // if (existingUser){
+            //     return c.json({
+            //     message : 'User with email already exists'
+            // },400)
+            // }
+            if (eventType === "user.created"){
+            const { email, username } = userData
             const user = await prisma.user.create({
                 data : {
                     username : body.username,
-                    password : body.password,
                     email : body.email,
-                    DOB : body.DOB,
-                    College : body.college,
-                    Degree : body.degree,
-                    Field : body.field
                 }
             })
             if (!user){
@@ -45,18 +44,18 @@ export class userController {
                 success : false
                 },400)
             }
-
             return c.json({
                 ID : user.ID,
                 userDetails : user, 
                 message : 'Register Successfull',
                 success : true
             },201)
+            }
         }
         catch(e){
             return c.json({
-                error : e instanceof Error,
-                message : 'Some error occured',
+                error : true,
+                message : e instanceof Error ? e.message : "unknown error",
                 success : false
             },500)
         }
@@ -95,8 +94,8 @@ export class userController {
         }
         catch(e){
             return c.json({
-                error : e instanceof Error,
-                message : 'Some error occured',
+                error : true,
+                message : e instanceof Error ? e.message : "Unknown error",
                 success : false
             },500)
         }
@@ -143,8 +142,8 @@ export class userController {
         catch(e){
             console.error(e)
             return c.json({
-                error : e instanceof Error,
-                message : 'Some error occured',
+                error : true,
+                message : e instanceof Error ? e.message : "Unknown error",
                 success : false
             },500)
         }

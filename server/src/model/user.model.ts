@@ -10,7 +10,7 @@ export const registerSchema = z.object({
     email : z.string().email('Invalid email address'),
     password : z.string().min(6, 'Password must be atleast of 6 characters'),
     DOB : z.string().nonempty('Provide DOB'),
-    College : z.string().nonempty('Provide college name'),
-    Degree : z.string().nonempty('Provide degree name'),
-    Field : z.string().nonempty('Provide field name'),
+    college : z.string().nonempty('Provide college name'),
+    degree : z.string().nonempty('Provide degree name'),
+    field : z.string().nonempty('Provide field name'),
 })
