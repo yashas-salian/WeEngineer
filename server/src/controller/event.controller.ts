@@ -96,12 +96,12 @@ export class eventController{
                 return c.json({
                 message : "ID not found",
                 success : false
-                })
+                },500)
             }
 
             const body = await c.req.json()
             const prisma = getPrismaClient(c.env.DATABASE_URL)
-            const res = await prisma.event.update({
+            const response = await prisma.event.update({
                 where : {
                     id : Number(eventID)
                 },
@@ -112,13 +112,65 @@ export class eventController{
                     type: body.type
                 }
             })
+
+            if(!response){
+                    return c.json({
+                    message : "Event update failed",
+                    success : false
+                },400)
+            }
+
+            return c.json({
+                message : "Event updated successfully",
+                response,
+                success : true
+            },200)
             
         }catch(error){
             return c.json({
-                message : "Event updated successfully",
+                message : "Update failed due to error",
                 error : error instanceof Error ? error.message : "Unknown error",
                 success : false
-            })
+            },500)
         }
-    } 
+    }
+    
+    static async delete(c : Context){
+        try{
+            const eventID = c.req.query("id")
+            if(!eventID) {
+                return c.json({
+                message : "ID not found",
+                success : false
+                },500)
+            }
+            
+            const prisma = getPrismaClient(c.env.DATABASE_URL)
+            const response = await prisma.event.delete({
+                where : {
+                    id : Number(eventID)
+                }
+            })
+
+            if(!response){
+                    return c.json({
+                    message : "Event deletion failed",
+                    success : false
+                },400)
+            }
+
+            return c.json({
+                message : "Event deleted successfully",
+                response,
+                success : true
+            },200)
+            
+        }catch(error){
+            return c.json({
+                message : "deletion failed due to error",
+                error : error instanceof Error ? error.message : "Unknown error",
+                success : false
+            },500)
+        }
+    }
 }

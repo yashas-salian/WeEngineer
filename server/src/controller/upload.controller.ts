@@ -1,19 +1,28 @@
 import { Context } from "hono";
 import { UploadApiResponse} from "cloudinary"
 import { getPrismaClient } from "../db/prisma";
+import { PdfVality } from "../utils/checkPdfValidity";
 export class uploadController{
     static async upload(c : Context){
         try{
-            // const {year , Examtype , college_name} = await c.req.json()
             const formData = await c.req.formData()
             const year = formData.get("year")?.toString() || ""
             const Examtype = formData.get("Examtype")?.toString() || ""
             const college_name = formData.get("college_name")?.toString() || ""
             const subject_name = formData.get("subject_name")?.toString() || ""
             const userID = formData.get("userID")?.toString() || ""
+            const type = formData.get("type")?.toString() || "notes"
             const file = formData.get('file') as File
             if (!file) throw new Error ("No file found")
             
+            const isValid = await PdfVality(c, subject_name, type, college_name,file)  || ""
+            if(isValid?.toLowerCase() == 'no' || isValid == ""){
+                return c.json({
+                    message : `Select correct type or upload a valid ${type}`,
+                    success : false
+                },500)
+            }
+                
             const cloudName = c.env.CLOUDINARY_CLOUD_NAME
             const uploadPreset = c.env.CLOUDINARY_UPLOAD_PRESET 
 
@@ -48,7 +57,8 @@ export class uploadController{
 
             if (!responseFromDB) throw new Error ("Database entry of pdf failed")
             return c.json({
-                Message : "file uploaded successfully",
+                valid : isValid,
+                message : "file uploaded successfully",
                 responseFromDB
             },200)
         }
