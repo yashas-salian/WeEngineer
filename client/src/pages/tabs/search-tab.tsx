@@ -38,13 +38,14 @@ import subjects from "../../data/subjects-data.json"
 import { Link } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
 import type { tabStatus } from "@/components/ui/app-sidebar"
+import {BACKEND_URL} from "../../config"
 
 
 interface SearchSchema {
-  college_name: string
-  year: string
-  Examtype: string,
-  subject : string 
+  college_name?: string
+  year?: string
+  Examtype?: string,
+  subject? : string 
 }
 
 interface Data {
@@ -60,18 +61,13 @@ interface Data {
 }
 
 export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>> ,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage] = useState(12)
   const [pdf, setPdf] = useState<Data[]>([])
-  const [search, setSearch] = useState<SearchSchema>({
-    college_name: "",
-    year: "",
-    Examtype: "",
-    subject : ""
-  })
+  const [search, setSearch] = useState<SearchSchema>({})
 
   const blockPerPage = 4
   const [filter, setFilter] = useState(false)
@@ -86,81 +82,41 @@ export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dis
   const paginatedPdf = pdf.slice(firstPageIndex, lastPostIndex)
 
   const handleSubmit = async() =>{
-    if(search.Examtype === "" && search.college_name === "" && search.year === ""){
-        toast.error('Atleast select a single field',{
-            position : 'top-center'
-        })
+    const query = new URLSearchParams()
+    if (search.Examtype) query.append('Examtype',search.Examtype)
+    if (search.year) query.append('year',search.year)
+    if (search.subject) query.append('subject_name',search.subject)
+    if (search.college_name) query.append('college_name',search.college_name)
+      
+    if(!search.Examtype && !search.college_name && !search.subject && !search.year) {
+      toast.error("Select atleast one field",{
+        position : "top-center"
+      })
     }
-    else if(search.Examtype === "" && search.college_name != "" && search.year === ""){
-      const response = await axios.get(`http://127.0.0.1:8787/get-pdf-for-college?college_name=${search.college_name}`)
-
-      if (response.data.message == "No pdf with college name found"){
-        toast.error("No Pdf found",{
-          position : 'top-center'
-        })
-      }
-      else if (response.data.message == "Pdf's found"){
-        toast.success("Pdf found",{
-          position : 'top-center'
-        })
-        setPdf(response.data.data)
-      }
+    // const response = await axios.get(`http://127.0.0.1:8787/get-pdf?${query.toString()}`)
+    const response = await axios.get(`${BACKEND_URL}/get-pdf?${query.toString()}`)
+    if (response.data.message === "Pdf/pdf's found"){
+      toast.success("Pdf/Pdf's found",{
+        position : "top-center"
+      })
+      setPdf(response.data.response)
     }
-    else if(search.Examtype === "" && search.college_name != "" && search.year != ""){
-      const response = await axios.get(`http://127.0.0.1:8787/get-pdf-for-college-and-year?college_name=${search.college_name}&year=${search.year}`)
-
-      if (response.data.message == "No pdf with college name and exam year found"){
-        toast.error("No pdf with college name and exam year found",{
-          position : 'top-center'
-        })
-      }
-      else if (response.data.message == "Pdf's found"){
-        toast.success("Pdf found",{
-          position : 'top-center'
-        })
-        setPdf(response.data.data)
-      }
-    }
-    else if(search.Examtype != "" && search.college_name != "" && search.year === ""){
-      const response = await axios.get(`http://127.0.0.1:8787/get-pdf-for-college-and-exam-type?college_name=${search.college_name}&Examtype=${search.Examtype}`)
-
-      if (response.data.message == "No pdf with college name and exam-type found"){
-        toast.error("No pdf with college name and exam year found",{
-          position : 'top-center'
-        })
-      }
-      else if (response.data.message == "Pdf's found"){
-        toast.success("Pdf found",{
-          position : 'top-center'
-        })
-        setPdf(response.data.data)
-      }
+    else if (response.data.message === "Pdf for the following filter is not found"){
+      toast.error("Pdf for the following filter is not found",{
+        position : "top-center"
+      })
+      setPdf(response.data.response)
     }
     else{
-      const response = await axios.get(`http://127.0.0.1:8787/get-pdf-for-college-and-exam-type-and-year?college_name=${search.college_name}&Examtype=${search.Examtype}&year=${search.year}`)
-
-      if (response.data.message == "No pdf with college name, year and exam-type found"){
-        toast.error("No pdf with college name, year and exam-type found",{
-          position : 'top-center'
-        })
-      }
-      else if (response.data.message == "Pdf's found"){
-        toast.success("Pdf found",{
-          position : 'top-center'
-        })
-        setPdf(response.data.data)
-      }
+      toast.error("Some error occured",{
+        position : "top-center"
+      })
     }
     }
 
 
   const clearFilters = () => {
-    setSearch({
-      college_name: "",
-      year: "",
-      Examtype: "",
-      subject : ""
-    })
+    setSearch({})
     setPdf([])
   }
 
@@ -232,7 +188,7 @@ export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dis
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-300">College name</label>
                         <Select
-                          value={search.college_name}
+                          value={search?.college_name}
                           onValueChange={(value) => setSearch((prev) => ({ ...prev, college_name: value }))}
                         >
                           <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
@@ -250,7 +206,7 @@ export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dis
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-300">Year</label>
                         <Select
-                          value={search.year}
+                          value={search?.year}
                           onValueChange={(value) => setSearch((prev) => ({ ...prev, year: value }))}
                         >
                           <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
@@ -267,7 +223,7 @@ export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dis
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-300">Subject name</label>
                         <Select
-                          value={search.subject}
+                          value={search?.subject}
                           onValueChange={(value) => setSearch((prev) => ({ ...prev, subject: value }))}
                         >
                           <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
@@ -284,7 +240,7 @@ export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dis
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-300">Exam Type</label>
                         <Select
-                          value={search.Examtype}
+                          value={search?.Examtype}
                           onValueChange={(value) => setSearch((prev) => ({ ...prev, Examtype: value }))}
                         >
                           <SelectTrigger className="bg-slate-700 border-slate-600 text-white">

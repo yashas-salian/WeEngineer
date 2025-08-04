@@ -10,6 +10,7 @@ export class uploadController{
             const Examtype = formData.get("Examtype")?.toString() || ""
             const college_name = formData.get("college_name")?.toString() || ""
             const subject_name = formData.get("subject_name")?.toString() || ""
+            const userID = formData.get("userID")?.toString() || ""
             const file = formData.get('file') as File
             if (!file) throw new Error ("No file found")
             
@@ -33,7 +34,7 @@ export class uploadController{
             const responseFromDB = await prisma.pdf.create({
                 data : {
                     pdfID : data.public_id,
-                    userID : 15,
+                    userID,
                     college_name,
                     pdf_name : data.original_filename,
                     year,
@@ -61,83 +62,3 @@ export class uploadController{
     }
 }
 }
-
-// import { Context } from "hono";
-// import { UploadApiErrorResponse, UploadApiResponse} from "cloudinary"
-// export class uploadController {
-//     static async upload(c: Context) {
-//         try {
-//             const formData = await c.req.formData()
-//             const file = formData.get('file') as File
-            
-//             if (!file) {
-//                 return c.json({
-//                     error: true,
-//                     message: 'No file found',
-//                     success: false
-//                 }, 400)
-//             }
-
-//             const cloudName = c.env.CLOUDINARY_CLOUD_NAME
-//             const uploadPreset = c.env.CLOUDINARY_UPLOAD_PRESET
-
-//             let cloudinaryUrl: string
-            
-//             if (file.type === 'application/pdf') {
-//                 // For PDFs, use IMAGE endpoint - this allows viewing in browser
-//                 cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`
-//             } else if (file.type.startsWith('image/')) {
-//                 cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`
-//             } else {
-//                 // For other document types, use raw
-//                 cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`
-//             }
-
-//             const body = new FormData()
-//             body.append('file', file)
-//             body.append('upload_preset', uploadPreset)
-
-//             console.log(`Uploading ${file.type} to ${cloudinaryUrl}`)
-
-//             const response  = await fetch(cloudinaryUrl, {
-//                 method: 'POST',
-//                 body,
-//             })
-
-//             // if (!response.ok) {
-//             //     const errorData = await response.json()
-//             //     throw new Error(`Cloudinary error: ${errorData.error?.message|| response.statusText}`)
-//             // }
-
-//             const responseData  = await response.json();
-//             const data = responseData as UploadApiResponse
-
-//             // For PDFs uploaded as images, you can create different URL formats
-//             const viewingUrls: any = {
-//                 original: data.secure_url,
-//             }
-
-//             // If it's a PDF uploaded as image, add additional viewing options
-//             if (file.type === 'application/pdf' && data.resource_type === 'image') {
-//                 const baseUrl = `https://res.cloudinary.com/${cloudName}/image/upload`
-//                 viewingUrls.thumbnail = `${baseUrl}/w_300,h_400,c_fit/${data.public_id}.jpg`
-//                 viewingUrls.preview = `${baseUrl}/w_600,h_800,c_fit/${data.public_id}.jpg`
-//                 viewingUrls.fullPage = `${baseUrl}/w_800,h_1200,c_fit/${data.public_id}.jpg`
-//             }
-
-//             return c.json({
-//                 message: "File uploaded successfully",
-//                 success: true,
-//                 responseData
-//             }, 200)
-
-//         } catch (e) {
-//             console.error('Upload error:', e)
-//             return c.json({
-//                 error: true,
-//                 message: e instanceof Error ? e.message : 'Upload failed',
-//                 success: false
-//             }, 500)
-//         }
-//     }
-// }

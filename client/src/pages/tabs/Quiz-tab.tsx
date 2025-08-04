@@ -12,6 +12,8 @@ import { toast, ToastContainer } from "react-fox-toast"
 import { useNavigate } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
 import type { tabStatus } from "@/components/ui/app-sidebar"
+import subjects from "../../data/subjects-data.json"
+import {BACKEND_URL} from "../../config"
 
 export const QuizTab = ({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
   const [difficulty, setDifficulty] = useState("")
@@ -23,7 +25,8 @@ export const QuizTab = ({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dis
   const navigate = useNavigate()
 
   const handleStartQuiz = async () => {
-    const response = await axios.get(`http://127.0.0.1:8787/get-questions?num_questions=${questionCount}&difficulty=${difficulty}&time_limit=${timeLimit}&topic=${topic}`)
+    // const response = await axios.get(`http://127.0.0.1:8787/get-questions?num_questions=${questionCount}&difficulty=${difficulty}&time_limit=${timeLimit}&topic=${topic}`)
+    const response = await axios.get(`${BACKEND_URL}/get-questions?num_questions=${questionCount}&difficulty=${difficulty}&time_limit=${timeLimit}&topic=${topic}`)
     if (!response){
         toast.error("Some error occured",{
             position: "top-center"
@@ -108,15 +111,10 @@ export const QuizTab = ({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dis
                   <SelectValue placeholder="Choose a topic" />
                 </SelectTrigger>
                 <SelectContent className="bg-white text-black">
-                  <SelectItem value="mathematics" className="hover:bg-gray-300">Mathematics</SelectItem>
-                  <SelectItem value="science" className="hover:bg-gray-300">Science</SelectItem>
-                  <SelectItem value="history" className="hover:bg-gray-300">History</SelectItem>
-                  <SelectItem value="geography" className="hover:bg-gray-300">Geography</SelectItem>
-                  <SelectItem value="literature" className="hover:bg-gray-300">Literature</SelectItem>
-                  <SelectItem value="technology" className="hover:bg-gray-300">Technology</SelectItem>
-                  <SelectItem value="sports" className="hover:bg-gray-300">Sports</SelectItem>
-                  <SelectItem value="movies" className="hover:bg-gray-300">Movies & Entertainment</SelectItem>
-                  <SelectItem value="general" className="hover:bg-gray-300">General Knowledge</SelectItem>
+                  {
+                    subjects.map((subject : string , index : number) => 
+                      <SelectItem key={index} value={subject} className="hover:bg-gray-300">{subject}</SelectItem>
+                    )}
                 </SelectContent>
               </Select>
             </CardContent>

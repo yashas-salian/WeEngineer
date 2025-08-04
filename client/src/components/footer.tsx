@@ -23,10 +23,10 @@ export const Footer = () =>{
                 }}
                 className="mb-4"
               >
-                <span className="text-white">Home</span>
+                <span className="text-white">Go to top</span>
               </Link></li>
-                <li className="font-semibold transition-all duration-100 hover:scale-105"><Link to="/features"><span className="text-white">Features</span></Link></li>
-                <li className="font-semibold transition-all duration-100 hover:scale-105"><Link to="/team"><span className="text-white">Our team</span></Link></li>
+                <li className="font-semibold transition-all duration-100 hover:scale-105"><Link to="/features"><span className="text-white">Terms & Privacy</span></Link></li>
+                <li className="font-semibold transition-all duration-100 hover:scale-105"><Link to="/team"><span className="text-white">Docs</span></Link></li>
                 <li className="font-semibold transition-all duration-100 hover:scale-105"><Link to="/about"><span className="text-white">About us</span></Link></li>
                 <li className="font-semibold transition-all duration-100 hover:scale-105"><Link to="/contact"><span className="text-white">Contact us</span></Link></li>
               </ul>

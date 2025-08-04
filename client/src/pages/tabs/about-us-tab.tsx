@@ -2,6 +2,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Heart, Target, Users, Zap } from "lucide-react"
 import logo from "../../components/images/robot-image.png"
 import { Link } from "react-router-dom"
+import { useEffect } from "react"
+import Aos from "aos"
 
 export const AboutUsTab = () => {
   const teamMembers = [
@@ -45,10 +47,16 @@ export const AboutUsTab = () => {
     },
   ]
 
+  useEffect(() => {
+      Aos.init({
+        duration: 1000,  
+        once: true   
+      });
+    }, [])
   return (
     <div className="min-h-screen bg-[#04152d]">
       {/* Hero Section */}
-      <section className="py-20">
+      <section data-aos="zoom-in" className="py-20">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h1 className="text-5xl font-bold text-white mb-6">About Us</h1>
           <p className="text-xl text-white max-w-3xl mx-auto">
@@ -59,7 +67,7 @@ export const AboutUsTab = () => {
       </section>
 
       {/* Story Section */}
-      <section className="bg-[#030f22] py-20">
+      <section data-aos="fade-up" className="bg-[#030f22] py-20">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -87,7 +95,7 @@ export const AboutUsTab = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 bg-[#04152d]">
+      <section data-aos="zoom-in" className="py-20 bg-[#04152d]">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-white mb-4">Our Values</h2>
@@ -96,7 +104,7 @@ export const AboutUsTab = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div data-aos="fade-up" className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => {
               const IconComponent = value.icon
               return (
@@ -118,14 +126,14 @@ export const AboutUsTab = () => {
       {/* Team Section */}
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
+          <div data-aos="zoom-in" className="text-center mb-16">
             <h2 className="text-3xl font-bold text-white mb-4">Meet Our Team</h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
               Get to know the talented individuals who make our company what it is today.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div data-aos="fade-up" className="grid md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
               <Card key={index} className="bg-[#030f22] text-center overflow-hidden hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">

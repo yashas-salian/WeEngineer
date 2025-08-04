@@ -18,7 +18,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { getPdfs } from "../../hooks/use-pdf"
+import { useCustomHook } from "../../hooks/use-pdf"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Link } from "react-router-dom"
@@ -32,6 +32,8 @@ import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
 import { NavBar } from "@/components/navbar"
 import type { tabStatus } from "@/components/ui/app-sidebar"
+import {BACKEND_URL, OCR_Key} from "../../config"
+import { useUser } from "@clerk/clerk-react"
 
 
 export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { setLoading: React.Dispatch<React.SetStateAction<boolean>>, setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) =>{
@@ -40,16 +42,19 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
       college_name : string,
       year : string,
       subject : string,
-      exam_type : string
+      exam_type : string,
+      userID : string
     }
     const [files , setFiles] = useState<File[]>([]);
+    const [resetKey , setResetKey] = useState(0)
     const [status , setStatus] = useState< uploadStatus >("idle")
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
     const [currentPage , setCurrentPage] = useState(1)
     const [postsPerPage , setPostsPerPage] = useState(4)
     const lastPostIndex = currentPage * postsPerPage
     const firstPageIndex = lastPostIndex - postsPerPage
-    const { pdf } = getPdfs()
+    const { pdf } = useCustomHook()
+    const { user } = useUser()  
     const totalPages = Math.ceil(pdf.length / postsPerPage);
     const paginatedPdf = pdf.slice(firstPageIndex,lastPostIndex)
     const blockPerPage = 4
@@ -58,7 +63,8 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
       college_name : "",
       year : "",
       subject : "",
-      exam_type : ""
+      exam_type : "",
+      userID : user?.id ?? ""
     })
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -97,11 +103,17 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
     }
     const handleOnUploadChange = (files: File[]) =>{
             setFiles(files)
-        // console.log(files)
     }
+
 
     const handleOnUploadSubmit = async () =>{
         if (!files) return
+        if (uploadData.userID === ""){
+          toast.error("Some error occured",{
+            position : "top-center"
+          })
+          return
+        }
         if (uploadData.college_name === "" || uploadData.exam_type === "" || uploadData.subject === "" || uploadData.year === ""){
           toast.error("Please fill all the fields correctly",{
             position : "top-center"
@@ -116,8 +128,25 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
         formData.append("Examtype",uploadData.exam_type)
         formData.append("college_name",uploadData.college_name)
         formData.append("subject_name",uploadData.subject)
+        formData.append("userID",uploadData.userID)
+        const OCRformdata = new FormData()
+        OCRformdata.append("file", files[0])
+        OCRformdata.append("apikey", OCR_Key)
         try {
-            const response = await axios.post("http://127.0.0.1:8787/upload", formData)
+          // if(files[0].type === "application/pdf"){
+          //   const OCRResponse = await axios.post("https://api.ocr.space/parse/image",OCRformdata)
+          //   console.log(OCRResponse)
+          // }
+          console.log(files[0].type)
+            if(files[0].type != "application/pdf"){
+              setResetKey(prev => prev + 1)
+            toast.error("Only pdfs are allowed",{
+              position : "top-center"
+            })
+            return
+          }
+            // const response = await axios.post("http://127.0.0.1:8787/upload", formData)
+            const response = await axios.post(`${BACKEND_URL}/upload`, formData)
             console.log(response)
             if (response.data.Message === "file uploaded successfully"){
               setStatus("success")
@@ -200,7 +229,7 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
           </CardContent>
         </Card>
 
-          <Card data-aos="zoom-in-up" className="bg-slate-800/50 border-slate-700 mt-10 mr-4 ml-4">
+          <Card data-aos="fade-up" className="bg-slate-800/50 border-slate-700 mt-10 mr-4 ml-4">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-3">
               <Upload className="h-8 w-8 text-blue-400" />
@@ -211,7 +240,7 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
           <CardContent className="space-y-6">
             <div className="gap-8 items-center">
               <div className="grid justify-center space-y-6">
-                <FileUpload onChange={handleOnUploadChange}/>                
+                <FileUpload onChange={handleOnUploadChange} resetKey={resetKey}/>                
                     {files[0] && status !== "uploading" && (
                       <div className="grid gap-x-10">
                         <Card className="mb-8 bg-slate-800/50 border-slate-700">

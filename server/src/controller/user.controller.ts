@@ -2,61 +2,84 @@ import { Context } from "hono";
 import { loginSchema, registerSchema } from "../model/user.model";
 import { getPrismaClient } from "../db/prisma";
 import { redisSingleton } from "../db/redis.cache";
+import { Webhook } from "svix";
+import { WebhookEvent , User } from "@clerk/clerk-sdk-node";
 
 export class userController {
     static async register( c:Context , data : object ){
         try{
-            const body = await c.req.json()
-            // const isvalid  = registerSchema.safeParse(body)
-            // if (!isvalid.success){
-            //     return c.json({
-            //         message : 'Invalid inputs'
-            //     })
-            // }
-
-            const eventType = body.eventType
-            const userData = body.data
-            const prisma  =  getPrismaClient(c.env.DATABASE_URL)
-            console.log("prisma client created")
-
-            // const existingUser = await prisma.user.findFirst({
-            //     where : {
-            //         email: body.email
-            //     }
-            // })
-
-            // if (existingUser){
-            //     return c.json({
-            //     message : 'User with email already exists'
-            // },400)
-            // }
-            if (eventType === "user.created"){
-            const { email, username } = userData
-            const user = await prisma.user.create({
-                data : {
-                    username : body.username,
-                    email : body.email,
-                }
-            })
-            if (!user){
-                return c.json({
-                message : 'registration Unsuccessfull',
-                success : false
-                },400)
+            const webhookSecret = c.env.WEBHOOK_SECRET;
+            console.log("webhookSecret")
+            if (!webhookSecret) {
+                return c.json(
+                {
+                    message: "Webhook secret is not configured!",
+                },
+                500
+                );
             }
-            return c.json({
-                ID : user.ID,
-                userDetails : user, 
-                message : 'Register Successfull',
-                success : true
-            },201)
+
+            const payload = await c.req.text();
+            const svix_id = c.req.header("svix-id");
+            const svix_timestamp = c.req.header("svix-timestamp");
+            const svix_signature = c.req.header("svix-signature");
+
+            let event: WebhookEvent;
+            console.log("payload = ",payload)
+            try {
+                const wh = new Webhook(webhookSecret);
+                event = wh.verify(payload, {
+                "svix-id": svix_id as string,
+                "svix-timestamp": svix_timestamp as string,
+                "svix-signature": svix_signature as string,
+                }) as WebhookEvent;
+
+                if(event.type === "user.created"){
+                    const prisma  =  getPrismaClient(c.env.DATABASE_URL)
+                    let email = ""
+                    if(event.data.email_addresses && event.data.email_addresses.length > 0){
+                        email = event.data.email_addresses[0]?.email_address || ""
+                    }
+                    const username = event.data.username || ""
+                    const ID = event.data.id.toString() || ""
+                    const user = await prisma.user.create({
+                        data : {
+                            username,
+                            email,
+                            ID
+                        }
+                    })
+                    if (!user){
+                        return c.json({
+                        message : 'registration Unsuccessfull',
+                        success : false
+                        },400)
+                    }
+                    console.log('user =', user )
+                    return c.json({
+                        message : 'registration Successfull',
+                        success : true,
+                        data : user
+                        },200)
+                }
+            } catch (e) {
+                return c.json({
+                error : true,
+                message : e instanceof Error ? e.message : "unknown error",
+                success : false,
+                payload,
+                webhookSecret
+            },500)
             }
         }
         catch(e){
+
+            const payload = await c.req.json();
             return c.json({
                 error : true,
                 message : e instanceof Error ? e.message : "unknown error",
-                success : false
+                success : false,
+                payload,
             },500)
         }
     }
@@ -127,7 +150,7 @@ export class userController {
             console.log("prisma ckient creatred")
             const data = await prisma.user.findUnique({
                 where:{
-                    ID : Number(id)
+                    ID : id
                 }
             })
             if (!data) throw new Error("User not found")

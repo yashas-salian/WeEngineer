@@ -42,156 +42,49 @@ export class getPdfController{
 
     }
 
-    static async getAllPdfBasedOnCollege(c : Context){
-        try {
-            const college_name = await c.req.query('college_name')
-            // const isValid = getAllPdfBasedOnCollegeSchema.safeParse(body)
-
-            // if(!isValid) throw new Error ("Invalid values passed")
-            
-            const prisma = getPrismaClient(c.env.DATABASE_URL)
-
-            const data =  await prisma.pdf.findMany({
-                where :{
-                    college_name
-                }
-            })
-            
-            if (!data || data.length == 0){
-                return c.json({
-                    message : "No pdf with college name found",
-                    success : false,
-                },400)
-            }
-
-            return c.json({
-                message : "Pdf's found",
-                data,
-                success : true,
-            },200)
-                
-        } catch (e) {
-            return c.json({
-                error : e instanceof Error,
-                message : "Some error occured",
-                success : false
-            },500)
-        }
-    }  
-    
-    static async getAllPdfBasedOnYearAndCollege(c : Context){
-        try {
-            const college_name = await c.req.query('college_name')
-            const year = await c.req.query('year')
-            // const isValid = getAllPdfBasedOnYearAndCollegeSchema.safeParse(body)
-
-            // if(!isValid) throw new Error ("Invalid values passed")
-            
-            const prisma = getPrismaClient(c.env.DATABASE_URL)
-
-            const data =  await prisma.pdf.findMany({
-                where :{
-                    college_name ,
-                    year
-                }
-            })
-
-            if (!data || data.length == 0){
-                return c.json({
-                    message : "No pdf with college name and exam year found",
-                    success : false,
-                },400)
-            }
-
-            return c.json({
-                message : "Pdf's found",
-                data,
-                success : true,
-            },200)
-                
-        } catch (e) {
-            return c.json({
-                error : e instanceof Error,
-                message : "Some error occured",
-                success : false
-            },500)
-        }
-    }
-
-    static async getAllPdfBasedOnExamTypeAndCollege(c : Context){
-        try {
-            const college_name = await c.req.query('college_name')
-            const Examtype = await c.req.query('Examtype')
-            // const isValid = getAllPdfBasedOnExamTypeAndCollegeSchema.safeParse(body)
-
-            // if(!isValid) throw new Error ("Invalid values passed")
-            
-            const prisma = getPrismaClient(c.env.DATABASE_URL)
-
-            const data =  await prisma.pdf.findMany({
-                where :{
-                    college_name ,
-                    Examtype
-                }
-            })
-
-            if (!data || data.length == 0){
-                return c.json({
-                    message : "No pdf with college name and exam-type found",
-                    success : false,
-                },400)
-            }
-
-            return c.json({
-                message : "Pdf's found",
-                data,
-                success : true,
-            },200)
-                
-        } catch (e) {
-            return c.json({
-                error : e instanceof Error,
-                message : "Some error occured",
-                success : false
-            },500)
-        }
-    }
-    static async getAllPdfBasedOnExamTypeAndCollegeAndYear(c : Context){
+    static async getFillteredPdf(c : Context){
         try {
             const college_name = await c.req.query('college_name')
             const Examtype = await c.req.query('Examtype')
             const year = await c.req.query('year')
-            // const isValid = getAllPdfBasedOnExamTypeAndCollegeAndYearSchema.safeParse(body)
+            const subject_name = await c.req.query('subject_name')
 
-            // if(!isValid) throw new Error ("Invalid values passed")
-            
+            const filter : any = {}
+            if (college_name) filter.college_name = college_name
+            if (Examtype) filter.Examtype = Examtype
+            if (year) filter.year = year
+            if (subject_name) filter.subject_name = subject_name
+
             const prisma = getPrismaClient(c.env.DATABASE_URL)
 
-            const data =  await prisma.pdf.findMany({
-                where :{
-                    college_name ,
-                    Examtype ,
-                    year 
-                }
+            const response = await prisma.pdf.findMany({
+                where : filter
             })
 
-            if (!data || data.length == 0){
+            if (!response){
                 return c.json({
-                    message : "No pdf with college name, year and exam-type found",
-                    success : false,
-                },400)
+                    message : "Pdf for the following filter is not found / Db call failed",
+                    success : false
+                },404) 
+            }
+
+            if (response.length == 0){
+                return c.json({
+                    message : "Pdf for the following filter is not found",
+                    success : false
+                },404) 
             }
 
             return c.json({
-                message : "Pdf's found",
-                data,
-                success : true,
-            },200)
-                
-        } catch (e) {
+                message : "Pdf/pdf's found",
+                response,
+                success : true
+            },200) 
+
+        } catch (error) {
             return c.json({
-                error : e instanceof Error,
-                message : "Some error occured",
+                error : true,
+                message : error instanceof Error ? error.message : "unknown error",
                 success : false
             },500)
         }

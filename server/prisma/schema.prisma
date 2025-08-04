@@ -15,7 +15,7 @@ datasource db {
 
 
 model User{
-  ID Int @id @default(autoincrement())
+  ID String @id
   username String @unique
   email String @unique
   password String?
@@ -24,11 +24,12 @@ model User{
   Degree String?
   Field String?
   pdfs Pdf[]
+  events Event[]
 }
 
 model Pdf{
   pdfID String @id
-  userID Int
+  userID String
   college_name String
   subject_name String
   pdf_name String
@@ -37,5 +38,15 @@ model Pdf{
   Url String
   secure_Url String
   size Int
+  user User @relation(fields: [userID], references: [ID])
+}
+
+model Event{
+  id Int @id @default(autoincrement())
+  userID String
+  title String
+  description String
+  dueDate DateTime
+  type String
   user User @relation(fields: [userID], references: [ID])
 }

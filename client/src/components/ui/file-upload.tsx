@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import  { useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
@@ -27,8 +27,10 @@ const secondaryVariant = {
 
 export const FileUpload = ({  
   onChange,
+  resetKey
 }: {
-  onChange?: (files: File[]) => void;
+  onChange?: (files: File[]) => void,
+  resetKey : number
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);    
@@ -41,9 +43,12 @@ export const FileUpload = ({
   const handleClick = () => {
     fileInputRef.current?.click();
   };
-  const handleOnDelete = () =>{
-      setFiles([])
+  useEffect(()=>{
+    setFiles([])
+    if (fileInputRef.current){
+      fileInputRef.current.value=""
     }
+  },[resetKey])
 
   const { getRootProps, isDragActive } = useDropzone({
     multiple: false,

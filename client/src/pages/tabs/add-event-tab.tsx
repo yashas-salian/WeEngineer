@@ -1,91 +1,82 @@
 "use client"
 
+import type React from "react"
+
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, Edit, Trash2, Check, X, Plus } from "lucide-react"
+import { Calendar, Edit, Trash2, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ToastContainer } from "react-fox-toast"
 import { NavBar } from "@/components/navbar"
 import Aos from "aos"
 import type { tabStatus } from "@/components/ui/app-sidebar"
+import axios from "axios"
+import { useUser } from "@clerk/clerk-react"
+import { useCustomHook } from "../../hooks/use-pdf"
+import type {eventData} from "../../hooks/use-pdf"
+import { BACKEND_URL } from "@/config"
 
 
-interface Event {
-  id: string
-  title: string
-  description: string
-  date: string
-  type: "exam" | "deadline" | "assignment" | "other"
-  status: "pending" | "completed" | "given-up"
-  createdAt: Date
-}
 
-export const AddEventTab=({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
-  const [events, setEvents] = useState<Event[]>([])
+export const AddEventTab = ({
+  setTab,
+  sidebarOpen,
+  setSidebarOpen,
+}: {
+  setTab: React.Dispatch<React.SetStateAction<tabStatus>>
+  sidebarOpen: boolean
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+  const { event } = useCustomHook()
+  const {user} = useUser()
+  const [events, setEvents] = useState<eventData[]>([])
   const [isAddingEvent, setIsAddingEvent] = useState(false)
-  const [editingEvent, setEditingEvent] = useState<string | null>(null)
+  const [editingEvent, setEditingEvent] = useState<number | null>(null)
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    date: "",
-    type: "exam" as Event["type"],
+    dueDate: "",
+    type: "Exam" as eventData["type"],
   })
-    // const [sidebarOpen, setSidebarOpen] = useState(true)
 
-
-  const handleAddEvent = () => {
-    if (!formData.title || !formData.date) return
-
-    const newEvent: Event = {
-      id: Date.now().toString(),
-      title: formData.title,
-      description: formData.description,
-      date: formData.date,
-      type: formData.type,
-      status: "pending",
-      createdAt: new Date(),
+  const handleAddEvent = async() => {
+    if (!formData.title || !formData.dueDate) return
+    const formattedDate = new Date(formData.dueDate)
+    const response = await axios.post(`${BACKEND_URL}/add-event?id=${user?.id}`,{
+        title : formData.title,
+        description : formData.description,
+        dueDate : formattedDate,
+        type : formData.type,
+    })
+    if(response.data.response === 'Event added successfully'){
+      // setEvents([...events, response.data.response])
+      setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
+      setIsAddingEvent(false)
     }
 
-    setEvents([...events, newEvent])
-    setFormData({ title: "", description: "", date: "", type: "exam" })
-    setIsAddingEvent(false)
   }
 
-  const handleEditEvent = (id: string, updatedData: Partial<Event>) => {
-    setEvents(events.map((event) => (event.id === id ? { ...event, ...updatedData } : event)))
+  const handleEditEvent = (index: number, updatedData: Partial<eventData>) => {
+    const updatedEvents = events.map((event, i) => (i === index ? { ...event, ...updatedData } : event))
+    setEvents(updatedEvents)
     setEditingEvent(null)
   }
 
-  const handleDeleteEvent = (id: string) => {
-    setEvents(events.filter((event) => event.id !== id))
+  const handleDeleteEvent = (index: number) => {
+    setEvents(events.filter((_, i) => i !== index))
   }
 
-  const handleStatusChange = (id: string, status: Event["status"]) => {
-    setEvents(events.map((event) => (event.id === id ? { ...event, status } : event)))
-  }
-
-  const getStatusColor = (status: Event["status"]) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800 border-green-200"
-      case "given-up":
-        return "bg-red-100 text-red-800 border-red-200"
-      default:
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
-    }
-  }
-
-  const getTypeColor = (type: Event["type"]) => {
+  const getTypeColor = (type: eventData["type"]) => {
     switch (type) {
-      case "exam":
+      case "Exam":
         return "bg-purple-100 text-purple-800"
-      case "deadline":
+      case "Deadline":
         return "bg-orange-100 text-orange-800"
-      case "assignment":
+      case "Assignment":
         return "bg-blue-100 text-blue-800"
       default:
         return "bg-gray-100 text-gray-800"
@@ -106,205 +97,182 @@ export const AddEventTab=({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.D
     return new Date(dateString) < new Date() && new Date(dateString).toDateString() !== new Date().toDateString()
   }
 
-  const sortedEvents = [...events].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  const sortedEvents = [...event].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+
   useEffect(() => {
-        Aos.init({
-          duration: 1000,  
-          once: true   
-        });
-      }, []);
-  return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
-                <ToastContainer/>
-                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
+    Aos.init({
+      duration: 1000,
+      once: true,
+    })
+  }, [])
 
-    <div className="items-center p-4">
-      <div className="max-w-4xl mx-auto">
-        <div data-aos="zoom-in" >
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Student Events</h1>
-            <p className="text-gray-400">Manage your exams, deadlines, and assignments</p>
+  return (
+    <div
+      className={cn(
+        "bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150",
+        sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]",
+      )}
+    >
+      <ToastContainer />
+      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab} />
+      <div className="items-center p-4">
+        <div className="max-w-4xl mx-auto">
+          <div data-aos="zoom-in">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-white mb-2">Student Events</h1>
+              <p className="text-gray-400">Manage your exams, deadlines, and assignments</p>
+            </div>
+            {/* Add Event Button */}
+            <div className="mb-6">
+              <Button
+                onClick={() => setIsAddingEvent((prev) => !prev)}
+                className="flex items-center gap-2 bg-white text-[#04152d]"
+              >
+                <Plus className="h-4 w-4" />
+                Add New Event
+              </Button>
+            </div>
           </div>
 
-          {/* Add Event Button */}
-          <div className="mb-6">
-            <Button onClick={() => setIsAddingEvent(prev => !prev)} className="flex items-center gap-2 bg-white text-[#04152d]">
-              <Plus className="h-4 w-4" />
-              Add New Event
-            </Button>
-          </div>
-        </div>
-
-        {/* Add Event Form */}
-        {isAddingEvent && (
-          <Card className="bg-[#030f22] mb-6">
-            <CardHeader>
-              <CardTitle>Add New Event</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Add Event Form */}
+          {isAddingEvent && (
+            <Card className="bg-[#030f22] mb-6">
+              <CardHeader>
+                <CardTitle className="text-white">Add New Event</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1">Event Title</label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      placeholder="Enter event title"
+                      className="bg-[#04152d] text-white border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1">Event Type</label>
+                    <select
+                      value={formData.type}
+                      onChange={(e) => setFormData({ ...formData, type: e.target.value as eventData["type"] })}
+                      className="w-full px-3 py-2 border border-gray-600 text-white bg-[#04152d] rounded-md"
+                    >
+                      <option value="Exam">Exam</option>
+                      <option value="Deadline">Deadline</option>
+                      <option value="Assignment">Assignment</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
                 <div>
-                  <label className="block text-sm font-medium text-white mb-1">Event Title</label>
+                  <label className="block text-sm font-medium text-white mb-1">Date</label>
                   <Input
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="Enter event title"
+                    type="date"
+                    value={formData.dueDate}
+                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                    className="bg-[#04152d] text-white border-gray-600"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white mb-1">Event Type</label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as Event["type"] })}
-                    className="w-full px-3 py-2 border border-gray-300 text-white bg-[#030f22] rounded-md"
-                  >
-                    <option value="exam">Exam</option>
-                    <option value="deadline">Deadline</option>
-                    <option value="assignment">Assignment</option>
-                    <option value="other">Other</option>
-                  </select>
+                  <label className="block text-sm font-medium text-white mb-1">Description</label>
+                  <Textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Enter event description (optional)"
+                    rows={3}
+                    className="bg-[#04152d] text-white border-gray-600"
+                  />
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Date</label>
-                <Input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Description</label>
-                <Textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Enter event description (optional)"
-                  rows={3}
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={handleAddEvent} className="bg-white text-[#04152d]">Add Event</Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsAddingEvent(false)
-                    setFormData({ title: "", description: "", date: "", type: "exam" })
-                  }}
-                  className="bg-white text-[#04152d]"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Events List */}
-        <div className="space-y-4">
-          {sortedEvents.length === 0 ? (
-            <Card  data-aos="fade-up" className="bg-slate-800/50 border-slate-700">
-              <CardContent className="text-center py-12">
-                <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">No events yet</h3>
-                <p className="text-gray-500">Add your first event to get started!</p>
+                <div className="flex gap-2">
+                  <Button onClick={handleAddEvent} className="bg-white text-[#04152d]">
+                    Add Event
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsAddingEvent(false)
+                      setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
+                    }}
+                    className="bg-white text-[#04152d]"
+                  >
+                    Cancel
+                  </Button>
+                </div>
               </CardContent>
             </Card>
-          ) : (
-            sortedEvents.map((event) => (
-              <Card key={event.id} data-aos="fade-up" className={`${event.status === "completed" ? "opacity-75" : ""}`}>
-                <CardContent className="p-6">
-                  {editingEvent === event.id ? (
-                    <EditEventForm
-                      event={event}
-                      onSave={(updatedData) => handleEditEvent(event.id, updatedData)}
-                      onCancel={() => setEditingEvent(null)}
-                    />
-                  ) : (
-                    <div className="bg-[#030f22] flex flex-col md:flex-row md:rounded-xl items-center justify-between gap-4 p-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3
-                            className={` text-lg font-semibold text-white ${event.status === "completed" ? "line-through text-gray-500" : "text-gray-900"}`}
-                          >
-                            {event.title}
-                          </h3>
-                          <Badge className={getTypeColor(event.type)}>{event.type}</Badge>
-                          <Badge className={getStatusColor(event.status)}>{event.status}</Badge>
-                          {isOverdue(event.date) && event.status === "pending" && (
-                            <Badge className="bg-red-100 text-red-800">Overdue</Badge>
-                          )}
-                        </div>
-                        {event.description && <p className="text-gray-300 mb-2">{event.description}</p>}
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            {formatDate(event.date)}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
-                            Added {event.createdAt.toLocaleDateString()}
-                          </div>
-                        </div>
-                      </div>
+          )}
 
-                      <div className="flex items-center gap-2">
-                        {event.status === "pending" && (
-                          <>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleStatusChange(event.id, "completed")}
-                              className="text-green-600 hover:text-green-700"
-                            >
-                              <Check className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleStatusChange(event.id, "given-up")}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </>
-                        )}
-                        {event.status !== "pending" && (
+          {/* Events List */}
+          <div className="space-y-4">
+            {sortedEvents.length === 0 ? (
+              <Card data-aos="fade-up" className="bg-slate-800/50 border-slate-700">
+                <CardContent className="text-center py-12">
+                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-white mb-2">No events yet</h3>
+                  <p className="text-gray-500">Add your first event to get started!</p>
+                </CardContent>
+              </Card>
+            ) : (
+              event.map((event, index) => (
+                <Card key={index} data-aos="fade-up" className="bg-[#030f22] border-slate-700">
+                  <CardContent className="p-6">
+                    {editingEvent === index ? (
+                      <EditEventForm
+                        event={event}
+                        onSave={(updatedData) => handleEditEvent(index, updatedData)}
+                        onCancel={() => setEditingEvent(null)}
+                      />
+                    ) : (
+                      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-semibold text-white">{event.title}</h3>
+                            <Badge className={getTypeColor(event.type)}>{event.type}</Badge>
+                            {isOverdue(event.dueDate) && <Badge className="bg-red-100 text-red-800">Overdue</Badge>}
+                          </div>
+                          {event.description && <p className="text-gray-300 mb-2">{event.description}</p>}
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-4 w-4" />
+                              {formatDate(event.dueDate)}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleStatusChange(event.id, "pending")}
+                            onClick={() => setEditingEvent(index)}
                             className="text-blue-600 hover:text-blue-700"
                           >
-                            Restore
+                            <Edit className="h-4 w-4" />
                           </Button>
-                        )}
-                        <Button size="sm" variant="outline" onClick={() => setEditingEvent(event.id)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDeleteEvent(event.id)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteEvent(index)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))
-          )}
+                    )}
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
-  </div>
   )
 }
 
 interface EditEventFormProps {
-  event: Event
-  onSave: (updatedData: Partial<Event>) => void
+  event: eventData
+  onSave: (updatedData: Partial<eventData>) => void
   onCancel: () => void
 }
 
@@ -312,12 +280,12 @@ function EditEventForm({ event, onSave, onCancel }: EditEventFormProps) {
   const [editData, setEditData] = useState({
     title: event.title,
     description: event.description,
-    date: event.date,
+    dueDate: event.dueDate,
     type: event.type,
   })
 
   const handleSave = () => {
-    if (!editData.title || !editData.date) return
+    if (!editData.title || !editData.dueDate) return
     onSave(editData)
   }
 
@@ -325,38 +293,50 @@ function EditEventForm({ event, onSave, onCancel }: EditEventFormProps) {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Event Title</label>
-          <Input value={editData.title} onChange={(e) => setEditData({ ...editData, title: e.target.value })} />
+          <label className="block text-sm font-medium text-white mb-1">Event Title</label>
+          <Input
+            value={editData.title}
+            onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+            className="bg-[#04152d] text-white border-gray-600"
+          />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
+          <label className="block text-sm font-medium text-white mb-1">Event Type</label>
           <select
             value={editData.type}
-            onChange={(e) => setEditData({ ...editData, type: e.target.value as Event["type"] })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setEditData({ ...editData, type: e.target.value as eventData["type"] })}
+            className="w-full px-3 py-2 border border-gray-600 text-white bg-[#04152d] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="exam">Exam</option>
-            <option value="deadline">Deadline</option>
-            <option value="assignment">Assignment</option>
-            <option value="other">Other</option>
+            <option value="Exam">Exam</option>
+            <option value="Deadline">Deadline</option>
+            <option value="Assignment">Assignment</option>
+            <option value="Other">Other</option>
           </select>
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-        <Input type="date" value={editData.date} onChange={(e) => setEditData({ ...editData, date: e.target.value })} />
+        <label className="block text-sm font-medium text-white mb-1">Date</label>
+        <Input
+          type="date"
+          value={editData.dueDate}
+          onChange={(e) => setEditData({ ...editData, dueDate: e.target.value })}
+          className="bg-[#04152d] text-white border-gray-600"
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-sm font-medium text-white mb-1">Description</label>
         <Textarea
           value={editData.description}
           onChange={(e) => setEditData({ ...editData, description: e.target.value })}
           rows={3}
+          className="bg-[#04152d] text-white border-gray-600"
         />
       </div>
       <div className="flex gap-2">
-        <Button onClick={handleSave} className="bg-white">Save Changes</Button>
-        <Button variant="outline" onClick={onCancel} className="bg-white">
+        <Button onClick={handleSave} className="bg-white text-[#04152d]">
+          Save Changes
+        </Button>
+        <Button variant="outline" onClick={onCancel} className="bg-white text-[#04152d]">
           Cancel
         </Button>
       </div>
