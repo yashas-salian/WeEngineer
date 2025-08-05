@@ -51,11 +51,11 @@ export const AddEventTab = ({
     })
     if(response.data.response === 'Event added successfully'){
       // setEvents([...events, response.data.response])
-      setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
-      setIsAddingEvent(false)
       toast.success("Event added successfully",{
         position : "top-center"
       })
+      setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
+      setIsAddingEvent(false)
     }
 
   }
