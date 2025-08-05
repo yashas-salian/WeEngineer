@@ -22,7 +22,7 @@ export const ratelimitter = async ( c : Context , next : Next)=>{
 
         // const redisNumberOfReqs = await redisSingleton.Get(c, cacheKey) ?? 0
         // if (Number(redisNumberOfReqs) >= LIMIT) throw new Error("Rate limit")
-        // redisSingleton.Set(c, cacheKey , 1 )
+        // redisSingleton.Set(c, cacheKey , 1 )nas
         await next()
 
     }

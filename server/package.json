@@ -5,6 +5,7 @@
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
+  "type": "module",
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@google/genai": "^1.9.0",
@@ -20,6 +21,7 @@
     "mailtrap": "^4.2.0",
     "multer": "^2.0.1",
     "nodemailer": "^6.10.1",
+    "resend": "^4.8.0",
     "svix": "^1.69.0",
     "zod": "^3.25.28"
   },

@@ -2,6 +2,7 @@ import { Context } from "hono";
 import { UploadApiResponse} from "cloudinary"
 import { getPrismaClient } from "../db/prisma";
 import { PdfVality } from "../utils/checkPdfValidity";
+import { sendEmail } from "../utils/sendEmail";
 export class uploadController{
     static async upload(c : Context){
         try{
@@ -14,6 +15,7 @@ export class uploadController{
             const type = formData.get("type")?.toString() || "notes"
             const file = formData.get('file') as File
             if (!file) throw new Error ("No file found")
+                // sendEmail(c)
             
             const isValid = await PdfVality(c, subject_name, type, college_name,file)  || ""
             if(isValid?.toLowerCase() == 'no' || isValid == ""){

@@ -27,7 +27,7 @@ export const PdfVality = async(c : Context,subject : string, type : string, coll
                         }
                     }
                 ]
-            }
+            }   
         ]
     })
     const text = response?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
