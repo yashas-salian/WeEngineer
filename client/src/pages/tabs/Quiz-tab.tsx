@@ -11,11 +11,10 @@ import axios from "axios"
 import { toast, ToastContainer } from "react-fox-toast"
 import { useNavigate } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
-import type { tabStatus } from "@/components/ui/app-sidebar"
 import subjects from "../../data/subjects-data.json"
 import {BACKEND_URL} from "../../config"
 
-export const QuizTab = ({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
+export const QuizTab = ({sidebarOpen, setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
   const [difficulty, setDifficulty] = useState("")
   const [timeLimit, setTimeLimit] = useState([30])
   const [topic, setTopic] = useState("")
@@ -47,7 +46,7 @@ export const QuizTab = ({setTab, sidebarOpen, setSidebarOpen}:{setTab: React.Dis
   return (
     <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150", sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
         <ToastContainer/>
-        <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
+        <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
 
       <div className="max-w-2xl mx-auto">
         <div data-aos="zoom-in" className="text-center mb-8">

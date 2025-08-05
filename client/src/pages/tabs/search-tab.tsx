@@ -37,7 +37,6 @@ import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
 import { Link } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
-import type { tabStatus } from "@/components/ui/app-sidebar"
 import {BACKEND_URL} from "../../config"
 
 
@@ -60,7 +59,7 @@ interface Data {
   subject_name: string
 }
 
-export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dispatch<React.SetStateAction<tabStatus>> ,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
+export const Search = ({sidebarOpen , setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -71,7 +70,7 @@ export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dis
 
   const blockPerPage = 4
   const [filter, setFilter] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const isLoading = false
   // const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const words = ["PDFs", "Notes", "PYQs"]
@@ -156,7 +155,7 @@ export const Search = ({setTab, sidebarOpen , setSidebarOpen}:{setTab: React.Dis
 
   return (
     <div className={cn("bg-[#04152d] z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
-      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
+      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
 
       <div className="flex-1 p-6">
         {/* Hero Section */}

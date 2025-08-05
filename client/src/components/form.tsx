@@ -12,7 +12,7 @@ interface Selected{
     Examtype : string
 }
 
-export const Form = ({search , setSearch} : {search : SearchSchema , setSearch :React.Dispatch<React.SetStateAction<SearchSchema>>}) =>{
+export const Form = ({ setSearch} : { setSearch :React.Dispatch<React.SetStateAction<SearchSchema>>}) =>{
     const [selected , setSelected] = useState<Selected>({
         college_name : "" ,
         year : "" ,

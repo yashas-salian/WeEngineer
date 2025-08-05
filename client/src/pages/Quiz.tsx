@@ -4,8 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Badge } from "lucide-react"
-import { Clock, CheckCircle, XCircle, RotateCcw } from "lucide-react"
+import { Clock, RotateCcw } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 

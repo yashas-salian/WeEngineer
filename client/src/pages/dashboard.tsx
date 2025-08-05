@@ -21,23 +21,23 @@ return loading ? <div className="flex justify-center bg-[#04152d]"><EngineeringM
                       <AppSidebar tab={tab} setTab={setTab}/>
                       <SidebarInset className="flex-1 min-w-0 overflow-hidden">
                           {tab == "Home" &&
-                          <Home setLoading={setLoading} setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+                          <Home setLoading={setLoading} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Search" &&
-                            <Search setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+                            <Search sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Quiz" &&
-                            <QuizTab setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+                            <QuizTab sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Settings" &&
-                            <SettingsTab setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+                            <SettingsTab sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                           {
                             tab == "Calender" &&
-                            <AddEventTab setTab={setTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+                            <AddEventTab sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
                           }
                         <Footer/>
                       </SidebarInset>

@@ -10,10 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Edit, Trash2, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { ToastContainer } from "react-fox-toast"
+import { toast, ToastContainer } from "react-fox-toast"
 import { NavBar } from "@/components/navbar"
 import Aos from "aos"
-import type { tabStatus } from "@/components/ui/app-sidebar"
 import axios from "axios"
 import { useUser } from "@clerk/clerk-react"
 import { useCustomHook } from "../../hooks/use-pdf"
@@ -23,17 +22,15 @@ import { BACKEND_URL } from "@/config"
 
 
 export const AddEventTab = ({
-  setTab,
   sidebarOpen,
   setSidebarOpen,
 }: {
-  setTab: React.Dispatch<React.SetStateAction<tabStatus>>
   sidebarOpen: boolean
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const { event } = useCustomHook()
   const {user} = useUser()
-  const [events, setEvents] = useState<eventData[]>([])
+  // const [events, setEvents] = useState<eventData[]>([])
   const [isAddingEvent, setIsAddingEvent] = useState(false)
   const [editingEvent, setEditingEvent] = useState<number | null>(null)
   const [formData, setFormData] = useState({
@@ -60,14 +57,26 @@ export const AddEventTab = ({
 
   }
 
-  const handleEditEvent = (index: number, updatedData: Partial<eventData>) => {
-    const updatedEvents = events.map((event, i) => (i === index ? { ...event, ...updatedData } : event))
-    setEvents(updatedEvents)
+  const handleEditEvent = async(index: number, updatedData: Partial<eventData>) => {
+    // const updatedEvents = events.map((event, i) => (i === index ? { ...event, ...updatedData } : event))
+    // setEvents(updatedEvents)
     setEditingEvent(null)
+    const response = await axios.put(`${BACKEND_URL}/update-event?id=${index}`,updatedData)
+    if (response.data.message === "Event updated successfully"){
+      toast.success("Event updated successfully",{
+        position : "top-center"
+      })
+    }
   }
 
-  const handleDeleteEvent = (index: number) => {
-    setEvents(events.filter((_, i) => i !== index))
+  const handleDeleteEvent = async(index: number) => {
+    // setEvents(events.filter((_, i) => i !== index))
+    const response = await axios.delete(`${BACKEND_URL}/delete-event?id=${index}`)
+    if (response.data.message === "Event deleted successfully"){
+      toast.success("Event deleted successfully",{
+        position : "top-center"
+      })
+    }
   }
 
   const getTypeColor = (type: eventData["type"]) => {
@@ -114,7 +123,7 @@ export const AddEventTab = ({
       )}
     >
       <ToastContainer />
-      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab} />
+      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
       <div className="items-center p-4">
         <div className="max-w-4xl mx-auto">
           <div data-aos="zoom-in">
@@ -215,12 +224,12 @@ export const AddEventTab = ({
               </Card>
             ) : (
               event.map((event, index) => (
-                <Card key={index} data-aos="fade-up" className="bg-[#030f22] border-slate-700">
+                <Card key={event.id} data-aos="fade-up" className="bg-[#030f22] border-slate-700">
                   <CardContent className="p-6">
                     {editingEvent === index ? (
                       <EditEventForm
                         event={event}
-                        onSave={(updatedData) => handleEditEvent(index, updatedData)}
+                        onSave={(updatedData) => handleEditEvent(event.id, updatedData)}
                         onCancel={() => setEditingEvent(null)}
                       />
                     ) : (
@@ -251,7 +260,7 @@ export const AddEventTab = ({
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleDeleteEvent(index)}
+                            onClick={() => handleDeleteEvent(event.id)}
                             className="text-red-600 hover:text-red-700"
                           >
                             <Trash2 className="h-4 w-4" />

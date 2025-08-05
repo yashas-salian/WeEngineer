@@ -31,26 +31,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
 import { NavBar } from "@/components/navbar"
-import type { tabStatus } from "@/components/ui/app-sidebar"
 import {BACKEND_URL, OCR_Key} from "../../config"
 import { useUser } from "@clerk/clerk-react"
 
 
-export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { setLoading: React.Dispatch<React.SetStateAction<boolean>>, setTab: React.Dispatch<React.SetStateAction<tabStatus>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) =>{
+export const Home = ({ setLoading , sidebarOpen, setSidebarOpen }: { setLoading: React.Dispatch<React.SetStateAction<boolean>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) =>{
     type uploadStatus = "idle" | "uploading" | "error" | "success"
     interface uploadSchma {
       college_name : string,
       year : string,
       subject : string,
       exam_type : string,
-      userID : string
+      userID : string,
+      type : string
     }
     const [files , setFiles] = useState<File[]>([]);
     const [resetKey , setResetKey] = useState(0)
     const [status , setStatus] = useState< uploadStatus >("idle")
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
     const [currentPage , setCurrentPage] = useState(1)
-    const [postsPerPage , setPostsPerPage] = useState(4)
+    const postsPerPage = 4
     const lastPostIndex = currentPage * postsPerPage
     const firstPageIndex = lastPostIndex - postsPerPage
     const { pdf } = useCustomHook()
@@ -64,7 +64,8 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
       year : "",
       subject : "",
       exam_type : "",
-      userID : user?.id ?? ""
+      userID : user?.id ?? "",
+      type : "notes"
     })
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -133,11 +134,6 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
         OCRformdata.append("file", files[0])
         OCRformdata.append("apikey", OCR_Key)
         try {
-          // if(files[0].type === "application/pdf"){
-          //   const OCRResponse = await axios.post("https://api.ocr.space/parse/image",OCRformdata)
-          //   console.log(OCRResponse)
-          // }
-          console.log(files[0].type)
             if(files[0].type != "application/pdf"){
               setResetKey(prev => prev + 1)
             toast.error("Only pdfs are allowed",{
@@ -147,8 +143,7 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
           }
             // const response = await axios.post("http://127.0.0.1:8787/upload", formData)
             const response = await axios.post(`${BACKEND_URL}/upload`, formData)
-            console.log(response)
-            if (response.data.Message === "file uploaded successfully"){
+            if (response.data.message === "file uploaded successfully"){
               setStatus("success")
               toast.success("File uploaded successfully",{
                 position : "top-center"
@@ -156,14 +151,19 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
               setFiles([])
               // handleOnUploadChange(files)
             }
-            if(response.data.Message === "Some error occured"){
+            if(response.data.message === "Some error occured"){
               setStatus("error")
               toast.error("Some error occured",{
                 position : "top-center"
               })
             }
 
-        } catch (error) {
+        } catch (error : any) {
+          if (error?.response?.data.message === `Select correct type or upload a valid ${uploadData.type}`){
+              toast.error(`Select correct type or upload a valid ${uploadData.type}`,{
+                position : "top-center"
+              })
+            }
             setStatus("error")
         }
         finally{
@@ -180,7 +180,7 @@ export const Home = ({ setLoading , setTab , sidebarOpen, setSidebarOpen }: { se
 
     return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
                 <ToastContainer/>
-                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setTab={setTab}/> 
+                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
                 <StatusCard/>
 
           <Card data-aos="fade-up" className="bg-[#030f22] mr-4 ml-4 overflow-hidden">

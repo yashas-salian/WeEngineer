@@ -1,7 +1,7 @@
-import { SettingsTab } from "./tabs/settings-tab"
+// import { SettingsTab } from "./tabs/settings-tab"
 
-export const Settings = () => {
-    return <>
-        <SettingsTab/>
-    </>
-}
+// export const Settings = () => {
+//     return <>
+//         <SettingsTab/>
+//     </>
+// }

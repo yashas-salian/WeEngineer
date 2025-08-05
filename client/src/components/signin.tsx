@@ -5,15 +5,14 @@ import { Label } from "@/components/ui/label"
 import { Link, useNavigate } from "react-router-dom"
 import sky from "./images/sky-login.jpg"
 import {useSignIn , useClerk , useAuth} from "@clerk/clerk-react"
-import { useState } from "react"
 
 export const SigninComponent = () => {
     const navigate = useNavigate()
     const { signIn, isLoaded } = useSignIn()
     const {isSignedIn} = useAuth()
     const { setActive } = useClerk()
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const email = ""
+    const password = ""
 
     const handleLoginSubmit = async () =>{
         if(!isLoaded) return
