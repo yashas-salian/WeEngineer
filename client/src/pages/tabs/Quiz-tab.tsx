@@ -14,7 +14,7 @@ import { NavBar } from "@/components/navbar"
 import subjects from "../../data/subjects-data.json"
 import {BACKEND_URL} from "../../config"
 
-export const QuizTab = ({sidebarOpen, setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
+const QuizTab = ({sidebarOpen, setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
   const [difficulty, setDifficulty] = useState("")
   const [timeLimit, setTimeLimit] = useState([30])
   const [topic, setTopic] = useState("")
@@ -223,3 +223,4 @@ export const QuizTab = ({sidebarOpen, setSidebarOpen}:{sidebarOpen: boolean, set
     </div>
   )
 }
+export default QuizTab
