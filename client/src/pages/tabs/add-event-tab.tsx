@@ -53,11 +53,9 @@ export const AddEventTab = ({
       // setEvents([...events, response.data.response])
       setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
       setIsAddingEvent(false)
-      if (response.data.message === "Event added successfully"){
       toast.success("Event added successfully",{
         position : "top-center"
       })
-    }
     }
 
   }
