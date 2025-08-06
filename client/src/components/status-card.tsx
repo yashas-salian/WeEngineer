@@ -5,13 +5,13 @@ import { useCustomHook } from "../hooks/use-pdf"
 
 export const StatusCard = () =>{
     const showStats = true
-    const { pdf } = useCustomHook()
+    const { pdf, countOfPyq, countOfNotes } = useCustomHook()
     
         const stats = {
           totalFiles: pdf.length,
-          totalDownloads: 1247,
-          activeUsers: 89,
-          weeklyGrowth: 12.5,
+          PYQs: countOfPyq,
+          Notes: countOfNotes,
+          Subjects: "50+",
         }
     return <div data-aos="zoom-in">
     <AnimatePresence>
@@ -39,7 +39,7 @@ export const StatusCard = () =>{
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="text-white text-sm font-medium">PYQ's </p>
-                              <p className="text-3xl font-bold text-white">{stats.totalDownloads}</p>
+                              <p className="text-3xl font-bold text-white">{stats.PYQs}</p>
                             </div>
                             <Newspaper className="h-8 w-8 text-yellow-700" />
                           </div>
@@ -51,7 +51,7 @@ export const StatusCard = () =>{
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="text-white text-sm font-medium">Notes</p>
-                              <p className="text-3xl font-bold text-white">{stats.activeUsers}</p>
+                              <p className="text-3xl font-bold text-white">{stats.Notes}</p>
                             </div>
                             <NotebookTabs className="h-8 w-8 text-blue-900" />
                           </div>
@@ -62,8 +62,8 @@ export const StatusCard = () =>{
                         <CardContent className="p-6">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="text-white text-sm font-medium">Quiz</p>
-                              <p className="text-3xl font-bold text-white">{stats.weeklyGrowth}</p>
+                              <p className="text-white text-sm font-medium">Subjects</p>
+                              <p className="text-3xl font-bold text-white">{stats.Subjects}</p>
                             </div>
                             <TrendingUp className="h-8 w-8 text-green-700" />
                           </div>

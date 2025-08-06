@@ -6,3 +6,4 @@ export const pdfRouter = new Hono()
 
 pdfRouter.get('/get-all-pdf', ratelimitter, getPdfController.getAllPdf)
 pdfRouter.get('/get-pdf',ratelimitter,getPdfController.getFillteredPdf)
+pdfRouter.get('/get-pdf-stats',ratelimitter,getPdfController.getPdfStats)

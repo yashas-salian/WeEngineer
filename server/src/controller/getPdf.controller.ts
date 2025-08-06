@@ -91,4 +91,43 @@ export class getPdfController{
             },500)
         }
     }
+
+    static async getPdfStats( c : Context ){
+        try {
+            var countOfPyq = 0
+            var countOfNotes = 0
+            const prisma = getPrismaClient(c.env.DATABASE_URL)
+            const pyqCount = await prisma.pdf.count({
+                where : {
+                    type : "PYQ"
+                }
+            })
+            const notesCount = await prisma.pdf.count({
+                where : {
+                    type : "Notes"
+                }
+            })
+
+            if(pyqCount){
+                countOfPyq = pyqCount 
+            }
+            if(notesCount){
+               countOfNotes = notesCount
+            }
+
+            return c.json({
+                message : "Stats found",
+                countOfPyq,
+                countOfNotes,
+                success : true
+            },200)
+
+        } catch (error) {
+            return c.json({
+                error : true,
+                message : error instanceof Error ? error.message : "unknown error",
+                success : false
+            },500)
+        }
+    }
 }

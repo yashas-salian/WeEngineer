@@ -206,7 +206,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                       <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
                       <span>Attempt quizzes to test their knowledge</span>
                     </li>
-                  </ul>n
+                  </ul>
                   <p className="text-slate-400 italic">
                     Whether you're preparing for exams or revising key concepts, WeE is here to support your academic
                     journey.
