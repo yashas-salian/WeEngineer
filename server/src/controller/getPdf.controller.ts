@@ -44,16 +44,18 @@ export class getPdfController{
 
     static async getFillteredPdf(c : Context){
         try {
-            const college_name = await c.req.query('college_name')
-            const Examtype = await c.req.query('Examtype')
-            const year = await c.req.query('year')
-            const subject_name = await c.req.query('subject_name')
+            const college_name = c.req.query('college_name')
+            const Examtype = c.req.query('Examtype')
+            const year = c.req.query('year')
+            const subject_name = c.req.query('subject_name')
+            const type = c.req.query('type')
 
             const filter : any = {}
             if (college_name) filter.college_name = college_name
             if (Examtype) filter.Examtype = Examtype
             if (year) filter.year = year
             if (subject_name) filter.subject_name = subject_name
+            if (type) filter.type = type
 
             const prisma = getPrismaClient(c.env.DATABASE_URL)
 

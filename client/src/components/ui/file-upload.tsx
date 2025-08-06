@@ -62,7 +62,7 @@ export const FileUpload = ({
 
   return (
     <div>
-    <div className="w-200 bg-neutral-800 border border-dashed rounded-lg  " {...getRootProps()}>
+    <div className="sm:w-100 md:w-150 lg:w-200 bg-neutral-800 border border-dashed rounded-lg" {...getRootProps()}>
       <motion.div
         onClick={handleClick}
         whileHover="animate"

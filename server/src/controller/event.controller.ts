@@ -61,7 +61,11 @@ export class eventController{
             }
 
             const prisma = getPrismaClient(c.env.DATABASE_URL)
-            const response = await prisma.event.findMany() 
+            const response = await prisma.event.findMany({
+                where : {
+                    userID : id
+                }
+            }) 
             if(!response){
                 throw new Error()
             }

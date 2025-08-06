@@ -12,8 +12,8 @@ export class uploadController{
             const college_name = formData.get("college_name")?.toString() || ""
             const subject_name = formData.get("subject_name")?.toString() || ""
             const userID = formData.get("userID")?.toString() || ""
-            const type = formData.get("type")?.toString() || "notes"
-            const file = formData.get('file') as File
+            const type = formData.get("type")?.toString() || ""
+            const file = formData.get("file") as File
             if (!file) throw new Error ("No file found")
                 // sendEmail(c)
             
@@ -53,7 +53,8 @@ export class uploadController{
                     Url : data.url,
                     secure_Url : data.secure_url,
                     size : data.bytes,
-                    subject_name
+                    subject_name,
+                    type
                 }
             })
 

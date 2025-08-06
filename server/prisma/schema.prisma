@@ -38,6 +38,7 @@ model Pdf{
   Url String
   secure_Url String
   size Int
+  type String
   user User @relation(fields: [userID], references: [ID])
 }
 

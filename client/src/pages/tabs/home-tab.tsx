@@ -1,14 +1,8 @@
 import { FileUpload } from "@/components/ui/file-upload"
 import {  useEffect, useState } from "react"
 import axios from "axios"
-import { Badge, BookOpen, Calendar, Download, Eye, FileText, Grid3X3, List, MoreVertical, NotebookTabs, Sparkles, Trash2, Upload, } from "lucide-react"
+import { BookOpen, Calendar, FileText, Grid3X3, List, NotebookTabs, Sparkles, Upload, } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   Pagination,
   PaginationContent,
@@ -65,7 +59,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
       subject : "",
       exam_type : "",
       userID : user?.id ?? "",
-      type : "notes"
+      type : ""
     })
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -115,7 +109,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
           })
           return
         }
-        if (uploadData.college_name === "" || uploadData.exam_type === "" || uploadData.subject === "" || uploadData.year === ""){
+        if (uploadData.college_name === "" || uploadData.exam_type === "" || uploadData.subject === "" || uploadData.year === "" || uploadData.type === ""){
           toast.error("Please fill all the fields correctly",{
             position : "top-center"
           })
@@ -130,6 +124,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
         formData.append("college_name",uploadData.college_name)
         formData.append("subject_name",uploadData.subject)
         formData.append("userID",uploadData.userID)
+        formData.append("type",uploadData.type)
         const OCRformdata = new FormData()
         OCRformdata.append("file", files[0])
         OCRformdata.append("apikey", OCR_Key)
@@ -211,8 +206,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                       <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
                       <span>Attempt quizzes to test their knowledge</span>
                     </li>
-                  </ul>
-
+                  </ul>n
                   <p className="text-slate-400 italic">
                     Whether you're preparing for exams or revising key concepts, WeE is here to support your academic
                     journey.
@@ -243,7 +237,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                 <FileUpload onChange={handleOnUploadChange} resetKey={resetKey}/>                
                     {files[0] && status !== "uploading" && (
                       <div className="grid gap-x-10">
-                        <Card className="mb-8 bg-slate-800/50 border-slate-700">
+                <Card className="mb-8 bg-slate-800/50 border-slate-700">
                   <CardContent className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                       <div className="space-y-2">
@@ -314,6 +308,21 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                           </SelectContent>
                         </Select>
                       </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Type</label>
+                        <Select
+                          value={uploadData.type}
+                          onValueChange={(value) => setUploadData((prev) => ({ ...prev, type: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select content type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                              <SelectItem value="PYQ">PYQ</SelectItem>
+                              <SelectItem value="Notes">Notes</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -342,7 +351,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
             </div>
 
       
-                {pdf.length === 0 && (
+          {pdf.length === 0 && (
           <Card className="ml-10 mr-10 mb-10 bg-slate-800/50 border-slate-700">
             <CardContent className="py-12 text-center">
               <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground " />
@@ -354,16 +363,37 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
           </Card>
         )} 
 
+        {pdf.length > 0 && (
+          <div className="flex justify-end items-center gap-2 mr-6 mb-6">
+                <Button
+                  variant={viewMode === "grid" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
+                  className={
+                    viewMode === "grid"
+                      ? "bg-white"
+                      : "text-slate-300 hover:bg-slate-700"
+                  }
+                >
+                  <Grid3X3 className={cn("h-4 w-4 ", viewMode === "grid" ? "text-black" : "text-white")} />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
+                  className={
+                    viewMode === "list"
+                      ? "bg-white"
+                      : "text-slate-300 hover:bg-slate-700"
+                  }
+                >
+                  <List className={cn("h-4 w-4 ", viewMode === "list" ? "text-black" : "text-white")} />
+                </Button>
+              </div>
+        )}
+
         {viewMode === "grid" ? (
            <div className="space-y-10 mb-10">
-            <div className="space-x-2 ml-300">
-                        <Button className="bg-white" size="sm" onClick={() => setViewMode("grid")}>
-                        <Grid3X3 className="h-4 w-4 text-black" />
-                        </Button>
-                        <Button className="bg-[#030f22]" variant={viewMode === "grid" ? "default" : "outline"} size="sm" onClick={() => setViewMode("list")}>
-                        <List className="h-4 w-4 text-white" />
-                        </Button>
-                </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ml-10 mr-10 ">
             
             {paginatedPdf?.map((file,index) => (
@@ -408,15 +438,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
           </div>
           </div>
         ) : (
-            <div className="space-y-10 mb-10">
-                <div className="space-x-2 ml-300">
-                        <Button className="bg-[#030f22]" size="sm" onClick={() => setViewMode("grid")}>
-                        <Grid3X3 className="h-4 w-4 text-white" />
-                        </Button>
-                        <Button className="bg-white" variant={viewMode === "list" ? "default" : "outline"} size="sm" onClick={() => setViewMode("list")}>
-                        <List className="h-4 w-4 text-black" />
-                        </Button>
-                </div>
+          <div className="space-y-10 mb-10">
           <div className="ml-10 mr-10 space-y-2 ">
             {paginatedPdf?.map((file,index) => (
               <Link to={file.secure_Url}>
@@ -443,30 +465,6 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                         <span>•</span>
                         <span>{file.year}</span>
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge>{file.Examtype}</Badge>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
                     </div>
                   </div>
                 </CardContent>

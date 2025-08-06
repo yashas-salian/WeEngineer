@@ -2,22 +2,16 @@
 
 import { useState } from "react"
 import {
-  Badge,
   Calendar,
-  Download,
-  Eye,
   FileText,
   Filter,
   Grid3X3,
   List,
-  MoreVertical,
   NotebookTabs,
   SearchIcon,
-  Trash2,
   X,
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   Pagination,
   PaginationContent,
@@ -44,7 +38,8 @@ interface SearchSchema {
   college_name?: string
   year?: string
   Examtype?: string,
-  subject? : string 
+  subject? : string,
+  type? : string 
 }
 
 interface Data {
@@ -86,8 +81,9 @@ export const Search = () => {
     if (search.year) query.append('year',search.year)
     if (search.subject) query.append('subject_name',search.subject)
     if (search.college_name) query.append('college_name',search.college_name)
+    if (search.type) query.append('type',search.type)
       
-    if(!search.Examtype && !search.college_name && !search.subject && !search.year) {
+    if(!search.Examtype && !search.college_name && !search.subject && !search.year && !search.type) {
       toast.error("Select atleast one field",{
         position : "top-center"
       })
@@ -168,8 +164,8 @@ export const Search = () => {
           <Button
             onClick={() => setFilter(!filter)}
             className={cn(
-              "relative overflow-hidden px-8 py-3 rounded-full transition-all duration-300",
-              filter ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-white hover:bg-slate-100 text-slate-900",
+              "relative overflow-hidden px-8 py-3 rounded-full transition-all duration-300 hover:cursor-pointer",
+              filter ? "bg-[#030f22] text-white" : "bg-white hover:bg-slate-100 text-slate-900",
             )}
           >
             <div className="flex items-center gap-2">
@@ -252,13 +248,28 @@ export const Search = () => {
                           </SelectContent>
                         </Select>
                       </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-300">Type</label>
+                        <Select
+                          value={search?.type}
+                          onValueChange={(value) => setSearch((prev) => ({ ...prev, type: value }))}
+                        >
+                          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                            <SelectValue placeholder="Select content type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white text-[#04152d]">
+                              <SelectItem value="PYQ">PYQ</SelectItem>
+                              <SelectItem value="Notes">Notes</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
               <div className="flex gap-3">
                 <Button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                  className="bg-white hover:bg-gray-200 text-[#04152d] px-8 hover:cursor-pointer"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
@@ -275,7 +286,7 @@ export const Search = () => {
                 <Button
                   variant="outline"
                   onClick={clearFilters}
-                  className="border-slate-600 text-slate-300 hover:bg-slate-700 bg-transparent"
+                  className="border-slate-600 text-slate-300 hover:bg-slate-700 bg-transparent hover:cursor-pointer"
                 >
                   Clear Filters
                 </Button>
@@ -302,18 +313,18 @@ export const Search = () => {
                 <p className="text-slate-400">Found {pdf.length} results</p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex justify-end items-center gap-2 mb-6">
                 <Button
                   variant={viewMode === "grid" ? "default" : "outline"}
                   size="sm"
                   onClick={() => setViewMode("grid")}
                   className={
                     viewMode === "grid"
-                      ? "bg-blue-600 hover:bg-blue-700"
-                      : "border-slate-600 text-slate-300 hover:bg-slate-700"
+                      ? "bg-white"
+                      : "text-slate-300 hover:bg-slate-700"
                   }
                 >
-                  <Grid3X3 className="h-4 w-4" />
+                  <Grid3X3 className={cn("h-4 w-4 ", viewMode === "grid" ? "text-black" : "text-white")} />
                 </Button>
                 <Button
                   variant={viewMode === "list" ? "default" : "outline"}
@@ -321,11 +332,11 @@ export const Search = () => {
                   onClick={() => setViewMode("list")}
                   className={
                     viewMode === "list"
-                      ? "bg-blue-600 hover:bg-blue-700"
-                      : "border-slate-600 text-slate-300 hover:bg-slate-700"
+                      ? "bg-white"
+                      : "text-slate-300 hover:bg-slate-700"
                   }
                 >
-                  <List className="h-4 w-4" />
+                  <List className={cn("h-4 w-4 ", viewMode === "list" ? "text-black" : "text-white")} />
                 </Button>
               </div>
             </div>
@@ -406,34 +417,6 @@ export const Search = () => {
                             <span>{file.year}</span>
                           </div>
                         </div>
-
-                        <div className="flex items-center gap-3">
-                          <Badge className="bg-blue-600/20 text-blue-400 border-blue-600/30">
-                            {file.Examtype}
-                          </Badge>
-
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-slate-400 hover:text-white">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700">
-                              <DropdownMenuItem className="text-slate-300 hover:bg-slate-700">
-                                <Eye className="h-4 w-4 mr-2" />
-                                View
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="text-slate-300 hover:bg-slate-700">
-                                <Download className="h-4 w-4 mr-2" />
-                                Download
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-400 hover:bg-slate-700">
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -441,7 +424,7 @@ export const Search = () => {
               </div>
             )}
 
-            {paginatedPdf.length !=0 &&
+        {paginatedPdf.length !=0 &&
         <div className="flex justify-center mb-10">
           <Pagination >
             <PaginationContent>
