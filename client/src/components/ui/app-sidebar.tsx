@@ -7,7 +7,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   SidebarHeader,
   SidebarProvider,
 } from "@/components/ui/sidebar"
@@ -50,11 +49,11 @@ export function AppSidebar({
   setTab: React.Dispatch<React.SetStateAction<tabStatus>>
 }) {
   return (
-    <Sidebar className="bg-[#030f22]" collapsible="icon">
+    <Sidebar className="bg-[#030f22]" collapsible="offcanvas">
       <SidebarHeader className="p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-4xl font-bold text-white group-data-[collapsible=icon]:hidden">WeE</h1>
-          <SidebarTrigger className="text-white" />
+          {/* <SidebarTrigger className="text-white" /> */}
         </div>
       </SidebarHeader>
       <SidebarContent>

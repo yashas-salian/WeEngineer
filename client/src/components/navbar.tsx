@@ -1,13 +1,12 @@
 import logo from "../../public/WeE_logo.png"
 import { cn } from "@/lib/utils"
 import { UserButton } from "@clerk/clerk-react"
+import { SidebarTrigger } from "./ui/sidebar"
 
 export const NavBar = () => {  
     return <div className={cn("bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4")}>
                 <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
-                    {/* <SidebarTrigger className="text-4xl text-black" onClick={()=>{
-                        setSidebarOpen(prev => !prev)
-                    }}/> */}
+                    <SidebarTrigger className="text-4xl text-black"/>
                 </div>
                 <div className="col-span-1"></div>
                 <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
