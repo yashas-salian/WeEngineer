@@ -79,7 +79,6 @@ export const Search = () => {
 
   const handleSubmit = async() =>{
     try {
-      
       setLoading(true)
       const query = new URLSearchParams()
       if (search.Examtype) query.append('Examtype',search.Examtype)
@@ -101,12 +100,6 @@ export const Search = () => {
         })
         setPdf(response.data.response)
       }
-      else if (response.data.message === "Pdf for the following filter is not found"){
-        toast.error("Pdf for the following filter is not found",{
-          position : "top-center"
-        })
-        setPdf(response.data.response)
-      }
       else{
         toast.error("Some error occured",{
           position : "top-center"
@@ -114,6 +107,9 @@ export const Search = () => {
       }
     } catch (error) {
       setLoading(false)
+      toast.error("Pdf For the given filter is not found",{
+        position : "top-center"
+      })
     }
     finally{
       setLoading(false)
