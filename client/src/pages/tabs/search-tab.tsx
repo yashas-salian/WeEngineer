@@ -32,6 +32,7 @@ import subjects from "../../data/subjects-data.json"
 import { Link } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
 import {BACKEND_URL} from "../../config"
+import { EngineeringMachine } from "@/components/simple-cogs"
 
 
 interface SearchSchema {
@@ -55,6 +56,7 @@ interface Data {
 }
 
 export const Search = () => {
+  const [loading, setLoading] = useState(false)
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -76,38 +78,47 @@ export const Search = () => {
   const paginatedPdf = pdf.slice(firstPageIndex, lastPostIndex)
 
   const handleSubmit = async() =>{
-    const query = new URLSearchParams()
-    if (search.Examtype) query.append('Examtype',search.Examtype)
-    if (search.year) query.append('year',search.year)
-    if (search.subject) query.append('subject_name',search.subject)
-    if (search.college_name) query.append('college_name',search.college_name)
-    if (search.type) query.append('type',search.type)
+    try {
       
-    if(!search.Examtype && !search.college_name && !search.subject && !search.year && !search.type) {
-      toast.error("Select atleast one field",{
-        position : "top-center"
-      })
+      setLoading(true)
+      const query = new URLSearchParams()
+      if (search.Examtype) query.append('Examtype',search.Examtype)
+      if (search.year) query.append('year',search.year)
+      if (search.subject) query.append('subject_name',search.subject)
+      if (search.college_name) query.append('college_name',search.college_name)
+      if (search.type) query.append('type',search.type)
+        
+      if(!search.Examtype && !search.college_name && !search.subject && !search.year && !search.type) {
+        toast.error("Select atleast one field",{
+          position : "top-center"
+        })
+      }
+      // const response = await axios.get(`http://127.0.0.1:8787/get-pdf?${query.toString()}`)
+      const response = await axios.get(`${BACKEND_URL}/get-pdf?${query.toString()}`)
+      if (response.data.message === "Pdf/pdf's found"){
+        toast.success("Pdf/Pdf's found",{
+          position : "top-center"
+        })
+        setPdf(response.data.response)
+      }
+      else if (response.data.message === "Pdf for the following filter is not found"){
+        toast.error("Pdf for the following filter is not found",{
+          position : "top-center"
+        })
+        setPdf(response.data.response)
+      }
+      else{
+        toast.error("Some error occured",{
+          position : "top-center"
+        })
+      }
+    } catch (error) {
+      setLoading(false)
     }
-    // const response = await axios.get(`http://127.0.0.1:8787/get-pdf?${query.toString()}`)
-    const response = await axios.get(`${BACKEND_URL}/get-pdf?${query.toString()}`)
-    if (response.data.message === "Pdf/pdf's found"){
-      toast.success("Pdf/Pdf's found",{
-        position : "top-center"
-      })
-      setPdf(response.data.response)
+    finally{
+      setLoading(false)
     }
-    else if (response.data.message === "Pdf for the following filter is not found"){
-      toast.error("Pdf for the following filter is not found",{
-        position : "top-center"
-      })
-      setPdf(response.data.response)
-    }
-    else{
-      toast.error("Some error occured",{
-        position : "top-center"
-      })
-    }
-    }
+  }
 
 
   const clearFilters = () => {
@@ -149,7 +160,12 @@ export const Search = () => {
       return tempPages
     }
 
-  return (
+  return (<>
+    {loading && (
+      <div>
+        <EngineeringMachine/>
+      </div>
+    )}
     <div className={cn("w-full bg-[#04152d] min-h-screen overflow-x-hidden overflow-y-auto transition-all duration-150")}>
                 <ToastContainer/>
                 <NavBar/> 
@@ -463,5 +479,6 @@ export const Search = () => {
         )}
       </div>
     </div>
+  </>
   )
 }

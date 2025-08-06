@@ -17,10 +17,12 @@ import { useUser } from "@clerk/clerk-react"
 import { useCustomHook } from "../../hooks/use-pdf"
 import type {eventData} from "../../hooks/use-pdf"
 import { BACKEND_URL } from "@/config"
+import { EngineeringMachine } from "@/components/simple-cogs"
 
 
 
 export const AddEventTab = () => {
+  const [loading, setLoading] = useState(false)
   const { event } = useCustomHook()
   const {user} = useUser()
   // const [events, setEvents] = useState<eventData[]>([])
@@ -34,44 +36,66 @@ export const AddEventTab = () => {
   })
 
   const handleAddEvent = async() => {
-    if (!formData.title || !formData.dueDate) return
-    const formattedDate = new Date(formData.dueDate)
-    const response = await axios.post(`${BACKEND_URL}/add-event?id=${user?.id}`,{
-        title : formData.title,
-        description : formData.description,
-        dueDate : formattedDate,
-        type : formData.type,
-    })
-    if(response.data.response === 'Event added successfully'){
-      // setEvents([...events, response.data.response])
-      toast.success("Event added successfully",{
-        position : "top-center"
+    try {
+      if (!formData.title || !formData.dueDate) return
+      setLoading(true)
+      const formattedDate = new Date(formData.dueDate)
+      const response = await axios.post(`${BACKEND_URL}/add-event?id=${user?.id}`,{
+          title : formData.title,
+          description : formData.description,
+          dueDate : formattedDate,
+          type : formData.type,
       })
-      setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
+      if(response.data.message === 'Event added successfully'){
+        // setEvents([...events, response.data.response])
+        toast.success("Event added successfully",{
+          position : "top-center"
+        })
+        setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
+        setIsAddingEvent(false)
+      }
+    } catch (error) {
+      setLoading(false)
+    }
+    finally{
+      setLoading(false)
       setIsAddingEvent(false)
     }
 
   }
 
   const handleEditEvent = async(index: number, updatedData: Partial<eventData>) => {
-    // const updatedEvents = events.map((event, i) => (i === index ? { ...event, ...updatedData } : event))
-    // setEvents(updatedEvents)
-    setEditingEvent(null)
-    const response = await axios.put(`${BACKEND_URL}/update-event?id=${index}`,updatedData)
-    if (response.data.message === "Event updated successfully"){
-      toast.success("Event updated successfully",{
-        position : "top-center"
-      })
+    try {
+      setLoading(true)
+      setEditingEvent(null)
+      const response = await axios.put(`${BACKEND_URL}/update-event?id=${index}`,updatedData)
+      if (response.data.message === "Event updated successfully"){
+        toast.success("Event updated successfully",{
+          position : "top-center"
+        })
+      }
+    } catch (error) {
+      setLoading(false)
+    }
+    finally{
+      setLoading(false)
     }
   }
 
   const handleDeleteEvent = async(index: number) => {
-    // setEvents(events.filter((_, i) => i !== index))
-    const response = await axios.delete(`${BACKEND_URL}/delete-event?id=${index}`)
-    if (response.data.message === "Event deleted successfully"){
-      toast.success("Event deleted successfully",{
-        position : "top-center"
-      })
+    try {
+      setLoading(true)
+      const response = await axios.delete(`${BACKEND_URL}/delete-event?id=${index}`)
+      if (response.data.message === "Event deleted successfully"){
+        toast.success("Event deleted successfully",{
+          position : "top-center"
+        })
+      }
+    } catch (error) {
+      setLoading(false)
+    }
+    finally{
+      setLoading(false)
     }
   }
 
@@ -112,6 +136,12 @@ export const AddEventTab = () => {
   }, [])
 
   return (
+    <>
+    {loading && (
+      <div>
+        <EngineeringMachine/>
+      </div>
+    )}
     <div
       className={cn(
         "bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150"
@@ -130,7 +160,7 @@ export const AddEventTab = () => {
             <div className="mb-6">
               <Button
                 onClick={() => setIsAddingEvent((prev) => !prev)}
-                className="flex items-center gap-2 bg-white text-[#04152d]"
+                className="flex items-center gap-2 bg-white text-[#04152d] hover:cursor-pointer"
               >
                 <Plus className="h-4 w-4" />
                 Add New Event
@@ -189,7 +219,7 @@ export const AddEventTab = () => {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button onClick={handleAddEvent} className="bg-white text-[#04152d]">
+                  <Button onClick={handleAddEvent} className="bg-white text-[#04152d] hover:cursor-pointer">
                     Add Event
                   </Button>
                   <Button
@@ -198,7 +228,7 @@ export const AddEventTab = () => {
                       setIsAddingEvent(false)
                       setFormData({ title: "", description: "", dueDate: "", type: "Exam" })
                     }}
-                    className="bg-white text-[#04152d]"
+                    className="bg-white text-[#04152d] hover:cursor-pointer"
                   >
                     Cancel
                   </Button>
@@ -248,7 +278,7 @@ export const AddEventTab = () => {
                             size="sm"
                             variant="outline"
                             onClick={() => setEditingEvent(index)}
-                            className="text-blue-600 hover:text-blue-700"
+                            className="text-blue-600 hover:text-blue-700 hover:cursor-pointer"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -256,7 +286,7 @@ export const AddEventTab = () => {
                             size="sm"
                             variant="outline"
                             onClick={() => handleDeleteEvent(event.id)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 hover:cursor-pointer"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -271,6 +301,7 @@ export const AddEventTab = () => {
         </div>
       </div>
     </div>
+  </>
   )
 }
 
@@ -337,10 +368,10 @@ function EditEventForm({ event, onSave, onCancel }: EditEventFormProps) {
         />
       </div>
       <div className="flex gap-2">
-        <Button onClick={handleSave} className="bg-white text-[#04152d]">
+        <Button onClick={handleSave} className="bg-white text-[#04152d] hover:cursor-pointer">
           Save Changes
         </Button>
-        <Button variant="outline" onClick={onCancel} className="bg-white text-[#04152d]">
+        <Button variant="outline" onClick={onCancel} className="bg-white text-[#04152d] hover:cursor-pointer">
           Cancel
         </Button>
       </div>

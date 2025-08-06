@@ -27,9 +27,10 @@ import subjects from "../../data/subjects-data.json"
 import { NavBar } from "@/components/navbar"
 import {BACKEND_URL, OCR_Key} from "../../config"
 import { useUser } from "@clerk/clerk-react"
+import { EngineeringMachine } from "@/components/simple-cogs"
 
 
-export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateAction<boolean>>}) =>{
+export const Home = () =>{
     type uploadStatus = "idle" | "uploading" | "error" | "success"
     interface uploadSchma {
       college_name : string,
@@ -39,6 +40,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
       userID : string,
       type : string
     }
+    const [loading, setLoading] = useState(false)
     const [files , setFiles] = useState<File[]>([]);
     const [resetKey , setResetKey] = useState(0)
     const [status , setStatus] = useState< uploadStatus >("idle")
@@ -116,7 +118,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
           return
         }
         setStatus("uploading")
-        setLoading  (true)
+        setLoading(true)
         const formData = new FormData()
         formData.append("file" , files[0])
         formData.append("year", uploadData.year)
@@ -130,7 +132,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
         OCRformdata.append("apikey", OCR_Key)
         try {
             if(files[0].type != "application/pdf"){
-              setResetKey(prev => prev + 1)
+            setResetKey(prev => prev + 1)
             toast.error("Only pdfs are allowed",{
               position : "top-center"
             })
@@ -139,6 +141,7 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
             // const response = await axios.post("http://127.0.0.1:8787/upload", formData)
             const response = await axios.post(`${BACKEND_URL}/upload`, formData)
             if (response.data.message === "file uploaded successfully"){
+              setResetKey(prev => prev + 1)
               setStatus("success")
               toast.success("File uploaded successfully",{
                 position : "top-center"
@@ -173,7 +176,11 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
       });
     }, []);
 
-    return (<div className={cn( "bg-[#04152d] h-full overflow-x-hidden overflow-y-auto transition-all duration-150")}>
+    return (<>
+    {loading && (
+      <EngineeringMachine/>
+    )}
+    <div className={cn( "bg-[#04152d] h-full overflow-x-hidden overflow-y-auto transition-all duration-150")}>
                 <ToastContainer/>
                 <NavBar/> 
                 <StatusCard/>
@@ -205,6 +212,10 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                     <li className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
                       <span>Attempt quizzes to test their knowledge</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                      <span>Add tasks or events to track all important activities and responsibilities.</span>
                     </li>
                   </ul>
                   <p className="text-slate-400 italic">
@@ -371,8 +382,8 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                   onClick={() => setViewMode("grid")}
                   className={
                     viewMode === "grid"
-                      ? "bg-white"
-                      : "text-slate-300 hover:bg-slate-700"
+                      ? "bg-white hover:cursor-pointer"
+                      : "text-slate-300 hover:bg-slate-700 hover:cursor-pointer"
                   }
                 >
                   <Grid3X3 className={cn("h-4 w-4 ", viewMode === "grid" ? "text-black" : "text-white")} />
@@ -383,8 +394,8 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
                   onClick={() => setViewMode("list")}
                   className={
                     viewMode === "list"
-                      ? "bg-white"
-                      : "text-slate-300 hover:bg-slate-700"
+                      ? "bg-white hover:cursor-pointer"
+                      : "text-slate-300 hover:bg-slate-700 hover:cursor-pointer"
                   }
                 >
                   <List className={cn("h-4 w-4 ", viewMode === "list" ? "text-black" : "text-white")} />
@@ -510,7 +521,9 @@ export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateA
         </div>
       }
       {/* <BlueRobot/> */}
-            </div>)
+            </div>
+            </>
+            )
 
             
 }

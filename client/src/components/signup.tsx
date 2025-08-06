@@ -10,8 +10,10 @@ import { Link, useNavigate } from "react-router-dom"
 import sky from "./images/sky-login.jpg"
 import { useSignUp, useClerk, useAuth } from "@clerk/clerk-react"
 import { useState } from "react"
+import { EngineeringMachine } from "./simple-cogs"
 
 export const SignupComponent = () => {
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { signUp, isLoaded } = useSignUp()
   const {isSignedIn} = useAuth()
@@ -43,6 +45,7 @@ export const SignupComponent = () => {
         return
       }
     try {
+      setLoading(true)
       console.log("before result")
       const result = await signUp.create({
         emailAddress: formData.email,
@@ -61,6 +64,10 @@ export const SignupComponent = () => {
       }
     } catch (err) {
       console.error("Error during sign up:", err)
+      setLoading(false)
+    }
+    finally{
+      setLoading(false)
     }
   }
 
@@ -70,15 +77,28 @@ export const SignupComponent = () => {
         navigate('/dashboard')
         return
       }
-
-    await signUp?.authenticateWithRedirect({
-      strategy: provider,
-      redirectUrl: "/sso",
-      redirectUrlComplete: "/dashboard",
-    })
+    try {
+      setLoading(true)
+      await signUp?.authenticateWithRedirect({
+        strategy: provider,
+        redirectUrl: "/sso",
+        redirectUrlComplete: "/dashboard",
+      })
+    } catch (error) {
+      setLoading(false)
+    }  
+    finally{
+      setLoading(false)
+    }
   }
 
   return (
+    <>
+    {loading && (
+      <div>
+        <EngineeringMachine/>
+      </div>
+    )}
     <div className="w-screen min-h-screen w-full grid lg:grid-cols-2 overflow-hidden bg-[#04152d]">
       {/* Left side - Form */}
       <div className="flex items-center justify-center p-8 lg:p-12 bg-[#04152d] overflow-y-auto">
@@ -285,5 +305,6 @@ export const SignupComponent = () => {
         <div className="absolute bottom-1/3 left-8 w-24 h-24 bg-blue-400/20 rounded-full blur-lg"></div>
       </div>
     </div>
+  </>
   )
 }

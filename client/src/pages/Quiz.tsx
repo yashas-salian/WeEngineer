@@ -1,10 +1,10 @@
 "use client"
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Clock, RotateCcw } from "lucide-react"
+import { ArrowUp, Clock, Home, RotateCcw } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 
@@ -72,6 +72,16 @@ export const Quiz = () => {
     setShowResults(false)
   }
 
+  const navigate = useNavigate()
+
+  const scrollToTop = (e:any) => {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   if (showResults) {
     const score = calculateScore()
     const percentage = Math.round((score / quizData.questions.length) * 100)
@@ -79,6 +89,16 @@ export const Quiz = () => {
     return (
       <div className="bg-[#04152d] w-screen mx-auto p-6 space-y-6 overflow-hidden">
         <Card>
+          <div className="flex justify-center">
+            <Button className="bg-white text-[#04152d] rounded-lg hover: cursor-pointer"
+            onClick={()=>{
+              navigate("/dashboard")
+            }}
+            >
+            <Home/>
+              Go to Home
+            </Button>
+          </div>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Quiz Results</CardTitle>
             <CardDescription>
@@ -133,11 +153,19 @@ export const Quiz = () => {
             </div>
 
             <div className="flex justify-center">
-              <Button onClick={restartQuiz} className="bg-white text-[#04152d] gap-2">
+              <Button onClick={restartQuiz} className="bg-white text-[#04152d] gap-2 hover:cursor-pointer">
                 <RotateCcw className="w-4 h-4" />
                 Retake Quiz
               </Button>
             </div>
+            <Button className="fixed bottom-8 right-5 bg-white rounded-full hover:cursor-pointer"
+            onClick={(e) => {
+                  e.preventDefault();
+                  scrollToTop(e);
+                }}
+            >
+              <ArrowUp className="text-[#04152d]"/>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -206,6 +234,7 @@ export const Quiz = () => {
               <Button className="bg-white text-[#030f22]" onClick={handleNext}>Next</Button>
             )}
           </div>
+          
         </CardContent>
       </Card>
     </div>

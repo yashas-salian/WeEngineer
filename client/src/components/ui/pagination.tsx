@@ -34,7 +34,7 @@ function PaginationContent({
 }
 
 function PaginationItem({ ...props }: React.ComponentProps<"li">) {
-  return <li data-slot="pagination-item" {...props} className="text-white"/>
+  return <li data-slot="pagination-item" {...props} className="text-white hover:cursor-pointer"/>
 }
 
 type PaginationLinkProps = {
@@ -90,7 +90,7 @@ function PaginationNext({
     <PaginationLink
       aria-label="Go to next page"
       size="default"
-      className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
+      className={cn("gap-1 px-2.5 sm:pr-2.5 text-white", className)}
       {...props}
     >
       <span className="hidden sm:block text-white">Next</span>

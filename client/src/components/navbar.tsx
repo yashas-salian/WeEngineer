@@ -6,7 +6,7 @@ import { SidebarTrigger } from "./ui/sidebar"
 export const NavBar = () => {  
     return <div className={cn("bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4")}>
                 <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
-                    <SidebarTrigger className="text-4xl text-black"/>
+                    <SidebarTrigger className="text-4xl text-black hover:cursor-pointer"/>
                 </div>
                 <div className="col-span-1"></div>
                 <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">

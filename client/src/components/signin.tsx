@@ -5,8 +5,11 @@ import { Label } from "@/components/ui/label"
 import { Link, useNavigate } from "react-router-dom"
 import sky from "./images/sky-login.jpg"
 import {useSignIn , useClerk , useAuth} from "@clerk/clerk-react"
+import { useState } from "react"
+import { EngineeringMachine } from "./simple-cogs"
 
 export const SigninComponent = () => {
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const { signIn, isLoaded } = useSignIn()
     const {isSignedIn} = useAuth()
@@ -20,6 +23,8 @@ export const SigninComponent = () => {
         navigate('/dashboard')
         return
       }
+      try {
+        setLoading(true)
         const res = await signIn.create({identifier: email, password})
         console.log(res)
         if (res.status === "complete"){
@@ -29,21 +34,40 @@ export const SigninComponent = () => {
             navigate('/dashboard')
             return
         }
+      } catch (error) {
+        setLoading(false)
+      }
+      finally{
+        setLoading(false)
+      }
     }
     const handleOauthSubmit = async (provider: "oauth_google" | "oauth_github") => {
       if (isSignedIn){
         navigate('/dashboard')
         return
       }
+      try {
+        setLoading(true)
         await signIn?.authenticateWithRedirect({
           strategy: provider,
           redirectUrl: "/sso", 
           redirectUrlComplete: "/dashboard",
         });
-      
-    };
+      } catch (error) {
+        setLoading(false)
+      }
+      finally{
+        setLoading(false)
+      }
+    }
 
   return (
+    <>
+    {loading && (
+      <div>
+        <EngineeringMachine/>
+      </div>
+    )}
     <div className="w-screen min-h-screen w-full grid lg:grid-cols-2 overflow-hidden bg-[#04152d]">
       {/* Left side - Form */}
       <div className="flex items-center justify-center p-8 lg:p-12 bg-[#04152d]">
@@ -168,5 +192,6 @@ export const SigninComponent = () => {
         <div className="absolute bottom-1/3 left-8 w-24 h-24 bg-blue-400/20 rounded-full blur-lg"></div>
       </div>
     </div>
+  </>
   )
 }

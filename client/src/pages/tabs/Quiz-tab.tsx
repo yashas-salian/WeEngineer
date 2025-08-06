@@ -13,8 +13,10 @@ import { useNavigate } from "react-router-dom"
 import { NavBar } from "@/components/navbar"
 import subjects from "../../data/subjects-data.json"
 import {BACKEND_URL} from "../../config"
+import { EngineeringMachine } from "@/components/simple-cogs"
 
 const QuizTab = () => {
+  const [loading, setLoading] = useState(false)
   const [difficulty, setDifficulty] = useState("")
   const [timeLimit, setTimeLimit] = useState([30])
   const [topic, setTopic] = useState("")
@@ -24,26 +26,40 @@ const QuizTab = () => {
   const navigate = useNavigate()
 
   const handleStartQuiz = async () => {
-    // const response = await axios.get(`http://127.0.0.1:8787/get-questions?num_questions=${questionCount}&difficulty=${difficulty}&time_limit=${timeLimit}&topic=${topic}`)
-    const response = await axios.get(`${BACKEND_URL}/get-questions?num_questions=${questionCount}&difficulty=${difficulty}&time_limit=${timeLimit}&topic=${topic}`)
-    if (!response){
-        toast.error("Some error occured",{
-            position: "top-center"
-        })
-        return
-    } 
-    toast.success("Success",{
-            position: "top-center"
-        })
-    const data = response.data
-    navigate('/quiz',  { state: { data } })
-
-    console.log(response.data)
+    try {
+      setLoading(true)
+      // const response = await axios.get(`http://127.0.0.1:8787/get-questions?num_questions=${questionCount}&difficulty=${difficulty}&time_limit=${timeLimit}&topic=${topic}`)
+      const response = await axios.get(`${BACKEND_URL}/get-questions?num_questions=${questionCount}&difficulty=${difficulty}&time_limit=${timeLimit}&topic=${topic}`)
+      if (!response){
+          toast.error("Some error occured",{
+              position: "top-center"
+          })
+          return
+      } 
+      toast.success("Success",{
+              position: "top-center"
+          })
+      const data = response.data
+      navigate('/quiz',  { state: { data } })
+  
+      console.log(response.data)
+    } catch (error) {
+      setLoading(false)
+    }
+    finally{
+      setLoading(false)
+    }
   }
 
   const isFormValid = difficulty && topic
 
   return (
+    <>
+    {loading && (
+      <div>
+        <EngineeringMachine/>
+      </div>
+    )}
     <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150")}>
         <ToastContainer/>
         <NavBar/> 
@@ -221,6 +237,7 @@ const QuizTab = () => {
         </div>
       </div>
     </div>
+  </>
   )
 }
 export default QuizTab
