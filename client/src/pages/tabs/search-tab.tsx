@@ -32,7 +32,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils"
 import { FlipWords } from "@/components/ui/flip-words"
 import axios from "axios"
-import { toast } from "react-fox-toast"
+import { toast, ToastContainer } from "react-fox-toast"
 import colleges from "../../data/college-data.json"
 import subjects from "../../data/subjects-data.json"
 import { Link } from "react-router-dom"
@@ -59,7 +59,7 @@ interface Data {
   subject_name: string
 }
 
-export const Search = ({sidebarOpen , setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
+export const Search = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -154,10 +154,10 @@ export const Search = ({sidebarOpen , setSidebarOpen}:{sidebarOpen: boolean, set
     }
 
   return (
-    <div className={cn("bg-[#04152d] z-10 h-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
-      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
-
-      <div className="flex-1 p-6">
+    <div className={cn("w-full bg-[#04152d] min-h-screen overflow-x-hidden overflow-y-auto transition-all duration-150")}>
+                <ToastContainer/>
+                <NavBar/> 
+      <div className="space-y-6 p-6">
         {/* Hero Section */}
         <div data-aos="zoom-in" className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">

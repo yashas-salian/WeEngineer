@@ -1,6 +1,5 @@
 "use client"
 
-import type React from "react"
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -21,13 +20,7 @@ import { BACKEND_URL } from "@/config"
 
 
 
-export const AddEventTab = ({
-  sidebarOpen,
-  setSidebarOpen,
-}: {
-  sidebarOpen: boolean
-  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
-}) => {
+export const AddEventTab = () => {
   const { event } = useCustomHook()
   const {user} = useUser()
   // const [events, setEvents] = useState<eventData[]>([])
@@ -121,12 +114,11 @@ export const AddEventTab = ({
   return (
     <div
       className={cn(
-        "bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150",
-        sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]",
+        "bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150"
       )}
     >
       <ToastContainer />
-      <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+      <NavBar/>
       <div className="items-center p-4">
         <div className="max-w-4xl mx-auto">
           <div data-aos="zoom-in">

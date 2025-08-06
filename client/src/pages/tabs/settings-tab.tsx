@@ -7,12 +7,12 @@ import { AboutUsTab } from "./about-us-tab"
 import { NavBar } from "@/components/navbar"
 
 type settingstabStatus = "Account" | "Contact us" | "About us" | "Docs"
-export const SettingsTab = ({sidebarOpen, setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+export const SettingsTab = () => {
     const [settingsTab , setSettingsTab] = useState<settingstabStatus>("Account")
     // const [sidebarOpen, setSidebarOpen] = useState(true) 
-    return <div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    return <div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150")}>
                     <ToastContainer/>
-                    <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+                    <NavBar/> 
                 <div data-aos="zoom-in">
                     <h1 className="font-bold text-3xl pt-6 pl-6">
                         Settings

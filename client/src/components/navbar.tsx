@@ -1,19 +1,18 @@
 import logo from "../../public/WeE_logo.png"
-import { SidebarTrigger } from "./ui/sidebar"
 import { cn } from "@/lib/utils"
 import { UserButton } from "@clerk/clerk-react"
 
-export const NavBar = ({sidebarOpen , setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>}) => {  
-    return <div className={cn("bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4" , sidebarOpen ? "w-[calc(100vw-18rem)]" : "w-[calc(100vw-2rem)]")}>
+export const NavBar = () => {  
+    return <div className={cn("bg-[#04152d] border border-neutral-800 rounded-4xl grid grid-cols-3 p-4 m-4")}>
                 <div className="bg-white col-span-1 fixed rounded-full mt-2 z-100">
-                    <SidebarTrigger className="text-4xl text-black" onClick={()=>{
+                    {/* <SidebarTrigger className="text-4xl text-black" onClick={()=>{
                         setSidebarOpen(prev => !prev)
-                    }}/>
+                    }}/> */}
                 </div>
                 <div className="col-span-1"></div>
                 <div className="col-span-1 items-center text-gray-200 font-semibold text-4xl">
                     <div className="flex justify-center gap-x-2">
-                    <img src={logo} alt="Logo" className={cn("w-12 h-12 transition-all duration-400", sidebarOpen ? "w-10 h-10" : "")}></img>
+                    <img src={logo} alt="Logo" className={cn("w-12 h-12 transition-all duration-400")}></img>
                     <p className="text-white">WeEngineer</p>
                     </div>
                 </div>

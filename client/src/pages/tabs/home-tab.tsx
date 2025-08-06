@@ -35,7 +35,7 @@ import {BACKEND_URL, OCR_Key} from "../../config"
 import { useUser } from "@clerk/clerk-react"
 
 
-export const Home = ({ setLoading , sidebarOpen, setSidebarOpen }: { setLoading: React.Dispatch<React.SetStateAction<boolean>>,sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) =>{
+export const Home = ({ setLoading}: { setLoading: React.Dispatch<React.SetStateAction<boolean>>}) =>{
     type uploadStatus = "idle" | "uploading" | "error" | "success"
     interface uploadSchma {
       college_name : string,
@@ -178,9 +178,9 @@ export const Home = ({ setLoading , sidebarOpen, setSidebarOpen }: { setLoading:
       });
     }, []);
 
-    return (<div className={cn("bg-[#04152d] z-10 h-full w-full overflow-x-hidden overflow-y-auto transition-all duration-150" , sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    return (<div className={cn( "bg-[#04152d] h-full overflow-x-hidden overflow-y-auto transition-all duration-150")}>
                 <ToastContainer/>
-                <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+                <NavBar/> 
                 <StatusCard/>
 
           <Card data-aos="fade-up" className="bg-[#030f22] mr-4 ml-4 overflow-hidden">

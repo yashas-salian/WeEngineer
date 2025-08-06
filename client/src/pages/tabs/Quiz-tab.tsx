@@ -14,7 +14,7 @@ import { NavBar } from "@/components/navbar"
 import subjects from "../../data/subjects-data.json"
 import {BACKEND_URL} from "../../config"
 
-const QuizTab = ({sidebarOpen, setSidebarOpen}:{sidebarOpen: boolean, setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>  }) => {
+const QuizTab = () => {
   const [difficulty, setDifficulty] = useState("")
   const [timeLimit, setTimeLimit] = useState([30])
   const [topic, setTopic] = useState("")
@@ -44,9 +44,9 @@ const QuizTab = ({sidebarOpen, setSidebarOpen}:{sidebarOpen: boolean, setSidebar
   const isFormValid = difficulty && topic
 
   return (
-    <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150", sidebarOpen ? "w-[calc(100vw-16.5rem)]" : "w-[calc(100vw-0.5rem)]")}>
+    <div className={cn("bg-[#04152d] z-10 h-full w-full scroll-smooth overflow-x-hidden overflow-y-auto transition-all duration-150")}>
         <ToastContainer/>
-        <NavBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/> 
+        <NavBar/> 
 
       <div className="max-w-2xl mx-auto">
         <div data-aos="zoom-in" className="text-center mb-8">
