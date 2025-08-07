@@ -5,6 +5,7 @@ import { Signin } from "./pages/signin"
 import { SSOCallback } from "./pages/SSOCallback"
 import { Signup } from "./pages/signup"
 import { SignedIn  } from "@clerk/clerk-react"
+import { Landing } from "./pages/landing"
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/' element={<Landing/>}/>
         <Route path='/dashboard' element={<SignedIn><Dashboard/></SignedIn>}/>
         <Route path='/quiz' element={<SignedIn><Quiz/></SignedIn>}/>
         {/* <Route path='/settings' element={<Settings/>}/> */}
