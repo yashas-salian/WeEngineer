@@ -10,7 +10,12 @@ export const PdfVality = async(c : Context,subject : string, type : string, coll
     const base64data = fromByteArray(byteArray)
 
     const model = new GoogleGenAI({apiKey : c.env.GOOGLE_GEMINI_API_KEY})
-    const prompt = `check if the pdf is of the type ${type} and is of subject ${subject} and should contain college name as ${college_name} if correct send yes as an response and no if not`
+    const prompt = `Check if the uploaded PDF matches the following conditions:
+                    It should be of type ${type}.
+                    It should be related to the subject ${subject}.
+                    If the type is "PYQ", the PDF must contain the college name ${college_name}, if it doesn't respond no.
+                    If the type is "Notes", ignore the college name check.
+                    Respond with yes if all conditions are met, otherwise respond with no.`
     const response = await model.models.generateContent({
         model : 'gemini-2.0-flash',
         contents : [

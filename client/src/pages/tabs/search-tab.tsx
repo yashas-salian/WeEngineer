@@ -116,7 +116,6 @@ export const Search = () => {
     }
   }
 
-
   const clearFilters = () => {
     setSearch({})
     setPdf([])
