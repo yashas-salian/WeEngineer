@@ -9,12 +9,12 @@ export const SSOCallback = () => {
   useEffect(() => {
     const completeSSO = async () => {
       try {
-        await handleRedirectCallback({
-          redirectUrl: window.location.search+'/sso',
-          signInForceRedirectUrl : '/dashboard',
-          signUpForceRedirectUrl : '/dashboard'
-        })
-        navigate("/dashboard")
+          await handleRedirectCallback({
+            redirectUrl: window.location.origin+'/sso',
+            signInForceRedirectUrl : '/dashboard',
+            signUpForceRedirectUrl : '/dashboard'
+          })
+        // navigate("/dashboard")
       } catch (err) {
         console.error("OAuth error:", err)
         navigate("/signin")
