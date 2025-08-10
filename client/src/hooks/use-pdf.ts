@@ -14,22 +14,13 @@ export interface data{
     subject_name : string,
     type : string
 }
-export interface eventData{
-    id : number,
-    userID : string,
-    title : string,
-    description : string,
-    dueDate : string,
-    type : string
-}
-export const useCustomHook = () =>{
+
+export const usePdfHook = () =>{
     const { user } = useUser()
     const [pdf , setpdf] = useState<data[]>([])
-    const [event , setEvent] = useState<eventData[]>([])
     const [countOfPyq, setCountOfPyq] = useState(0)
     const [countOfNotes, setCountOfNotes] = useState(0)
-    // const [error, setError] = useState("")
-    // console.log("backend url = ",BACKEND_URL)
+
     const getAllPdfs = useCallback (async () => {
         try {
             // const res = await axios.get("http://127.0.0.1:8787/get-all-pdf")
@@ -43,19 +34,6 @@ export const useCustomHook = () =>{
             } catch (error) {
                 // setError(error as string)
         }},[])
-
-    const getEvents = useCallback(async ()=>{
-        const res = await axios.get(`${BACKEND_URL}/get-events?id=${user?.id}`)
-        try {
-            if (res.data.redisResponse){
-                setEvent(res.data.redisResponse)
-            }
-            if (res.data.response){
-                setEvent(res.data.response)
-            }
-            } catch (error) {
-                // setError(error as string)
-    }},[user?.id])
 
     const getPdfStats = useCallback(async ()=>{
         const res = await axios.get(`${BACKEND_URL}/get-pdf-stats`)
@@ -73,12 +51,10 @@ export const useCustomHook = () =>{
     useEffect(() => {
         getAllPdfs()
     },[getAllPdfs])
-    useEffect(() => {
-        getEvents()
-    },[getEvents, user?.id])
+
     useEffect(() => {
         getPdfStats()
     },[getPdfStats])
 
-    return { pdf, event, countOfPyq, countOfNotes }
+    return { pdf, countOfPyq, countOfNotes }
 }

@@ -12,7 +12,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { useCustomHook } from "../../hooks/use-pdf"
+import { usePdfHook } from "../../hooks/use-pdf"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Link } from "react-router-dom"
@@ -49,7 +49,7 @@ export const Home = () =>{
     const postsPerPage = 4
     const lastPostIndex = currentPage * postsPerPage
     const firstPageIndex = lastPostIndex - postsPerPage
-    const { pdf, countOfPyq, countOfNotes } = useCustomHook()
+    const { pdf, countOfPyq, countOfNotes } = usePdfHook()
     const { user } = useUser()  
     const totalPages = Math.ceil(pdf.length / postsPerPage);
     const paginatedPdf = pdf.slice(firstPageIndex,lastPostIndex)

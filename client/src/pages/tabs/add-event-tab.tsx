@@ -14,8 +14,8 @@ import { NavBar } from "@/components/navbar"
 import Aos from "aos"
 import axios from "axios"
 import { useUser } from "@clerk/clerk-react"
-import { useCustomHook } from "../../hooks/use-pdf"
-import type {eventData} from "../../hooks/use-pdf"
+import { useEventHook } from "../../hooks/use-event"
+import type {eventData} from "../../hooks/use-event"
 import { BACKEND_URL } from "@/config"
 import { EngineeringMachine } from "@/components/simple-cogs"
 
@@ -23,7 +23,7 @@ import { EngineeringMachine } from "@/components/simple-cogs"
 
 export const AddEventTab = () => {
   const [loading, setLoading] = useState(false)
-  const { event } = useCustomHook()
+  const { event } = useEventHook()
   const {user} = useUser()
   // const [events, setEvents] = useState<eventData[]>([])
   const [isAddingEvent, setIsAddingEvent] = useState(false)
