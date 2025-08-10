@@ -3,74 +3,74 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Files, Newspaper, NotebookTabs, TrendingUp } from "lucide-react"
 import { type data } from "../hooks/use-pdf"
 
-export const StatusCard = ({pdf, countOfPyq, countOfNotes}:{pdf: data[], countOfPyq: number, countOfNotes: number}) =>{
-    const showStats = true
-    // const { pdf, countOfPyq, countOfNotes } = useCustomHook()
-    
-        const stats = {
-          totalFiles: pdf.length,
-          PYQs: countOfPyq,
-          Notes: countOfNotes,
-          Subjects: "50+",
-        }
-    return <div data-aos="zoom-in">
+export const StatusCard = ({ pdf, countOfPyq, countOfNotes }: { pdf: data[], countOfPyq: number, countOfNotes: number }) => {
+  const showStats = true
+  // const { pdf, countOfPyq, countOfNotes } = useCustomHook()
+
+  const stats = {
+    totalFiles: pdf.length,
+    PYQs: countOfPyq,
+    Notes: countOfNotes,
+    Subjects: "50+",
+  }
+  return <div data-aos="zoom-in">
     <AnimatePresence>
     //               {showStats && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mx-6 mb-8"
-                    >
-                      <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-white text-sm font-medium">Total Files</p>
-                              <p className="text-3xl font-bold text-white">{stats.totalFiles}</p>
-                            </div>
-                            <Files className="h-8 w-8 text-orange-700" />
-                          </div>
-                        </CardContent>
-                      </Card>
-    
-                      <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-white text-sm font-medium">PYQ's </p>
-                              <p className="text-3xl font-bold text-white">{stats.PYQs}</p>
-                            </div>
-                            <Newspaper className="h-8 w-8 text-yellow-700" />
-                          </div>
-                        </CardContent>
-                      </Card>
-    
-                      <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-white text-sm font-medium">Notes</p>
-                              <p className="text-3xl font-bold text-white">{stats.Notes}</p>
-                            </div>
-                            <NotebookTabs className="h-8 w-8 text-blue-900" />
-                          </div>
-                        </CardContent>
-                      </Card>
-    
-                      <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-white text-sm font-medium">Subjects</p>
-                              <p className="text-3xl font-bold text-white">{stats.Subjects}</p>
-                            </div>
-                            <TrendingUp className="h-8 w-8 text-green-700" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mx-6 mb-8"
+        >
+          <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white text-sm font-medium">Total Files</p>
+                  <p className="text-3xl font-bold text-white">{stats.totalFiles}</p>
                 </div>
+                <Files className="h-8 w-8 text-orange-700" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white text-sm font-medium">PYQ's </p>
+                  <p className="text-3xl font-bold text-white">{stats.PYQs}</p>
+                </div>
+                <Newspaper className="h-8 w-8 text-yellow-700" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white text-sm font-medium">Notes</p>
+                  <p className="text-3xl font-bold text-white">{stats.Notes}</p>
+                </div>
+                <NotebookTabs className="h-8 w-8 text-blue-900" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="z-30 bg-[rgba(12,12,12,0.6)] border border-neutral-800">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white text-sm font-medium">Subjects</p>
+                  <p className="text-3xl font-bold text-white">{stats.Subjects}</p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-green-700" />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
 }
