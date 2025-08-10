@@ -49,7 +49,7 @@ export const Home = () =>{
     const postsPerPage = 4
     const lastPostIndex = currentPage * postsPerPage
     const firstPageIndex = lastPostIndex - postsPerPage
-    const { pdf } = useCustomHook()
+    const { pdf, countOfPyq, countOfNotes } = useCustomHook()
     const { user } = useUser()  
     const totalPages = Math.ceil(pdf.length / postsPerPage);
     const paginatedPdf = pdf.slice(firstPageIndex,lastPostIndex)
@@ -183,7 +183,7 @@ export const Home = () =>{
     <div className={cn( "bg-[#04152d] h-full overflow-x-hidden overflow-y-auto transition-all duration-150")}>
                 <ToastContainer/>
                 <NavBar/> 
-                <StatusCard/>
+                <StatusCard pdf={pdf} countOfPyq={countOfPyq} countOfNotes={countOfNotes}/>
 
           <Card data-aos="fade-up" className="bg-[#030f22] mr-4 ml-4 overflow-hidden">
           <CardContent className="p-0">

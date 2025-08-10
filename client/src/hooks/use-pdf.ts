@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import {BACKEND_URL} from "../config"
 import axios from "axios"
 import { useUser } from "@clerk/clerk-react"
-interface data{
+export interface data{
     ID : string,
     college_name : string,
     pdf_name : string,

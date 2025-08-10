@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Files, Newspaper, NotebookTabs, TrendingUp } from "lucide-react"
-import { useCustomHook } from "../hooks/use-pdf"
+import { type data } from "../hooks/use-pdf"
 
-export const StatusCard = () =>{
+export const StatusCard = ({pdf, countOfPyq, countOfNotes}:{pdf: data[], countOfPyq: number, countOfNotes: number}) =>{
     const showStats = true
-    const { pdf, countOfPyq, countOfNotes } = useCustomHook()
+    // const { pdf, countOfPyq, countOfNotes } = useCustomHook()
     
         const stats = {
           totalFiles: pdf.length,
